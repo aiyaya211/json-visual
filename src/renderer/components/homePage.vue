@@ -7,7 +7,7 @@
          :expandedOnStart="true" 
          @json-change="onJsonChange">
          </vue-json-editor> -->
-        <div style="margin-bottom: 10px;">
+        <div style="margin-bottom: 10px;display:flex;justify-content:space-between;">
             <el-upload
                 :multiple="false"
                 class="upload-demo"
@@ -20,7 +20,7 @@
                 :auto-upload="false">
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
-            <!-- <el-button size="small" type="primary" @click="importJson">导入</el-button> -->
+            <el-button size="small" type="primary" @click="importJson">生成json</el-button>
         </div>
         <div style="display: flex;">
             <div class="left-page">
@@ -32,9 +32,18 @@
             </json-viewer>
             </div>
             <div class="right-page">
+                <el-tabs v-model="activeName" @tab-click="handleClick">
+                    <el-tab-pane label="paramsConfig" name="paramsConfig"></el-tab-pane>
+                    <el-tab-pane label="channelsConfig" name="channelsConfig"></el-tab-pane>
+                    <el-tab-pane label="webConfig" name="webConfig"></el-tab-pane>
+                    <el-tab-pane label="increase" name="increase"></el-tab-pane>
+                    <el-tab-pane label="scannerConfig" name="scannerConfig"></el-tab-pane>
+                    <el-tab-pane label="backendConfig" name="backendConfig"></el-tab-pane>
+                </el-tabs>
                 <!-- paramsconfig -->
                <el-table
-                :data="tableData"
+                v-if="activeName == 'paramsConfig'"
+                :data="paramsconfigData"
                 style="width: 100%">
                 <el-table-column
                     prop="key"
@@ -51,7 +60,39 @@
                     label="flex"
                     width="100">
                 </el-table-column>
+                <el-table-column
+                    prop="prefix"
+                    label="prefix"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="options"
+                    label="options"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="increase"
+                    label="increase"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="validate"
+                    label="validate"
+                    width="100">
+                </el-table-column>
+                <!-- validate -->
               </el-table>
+              <el-form ref="form" :model="channelsConfigData" label-width="100px" v-if="activeName == 'channelsConfig'">
+                <el-form-item label="status">
+                    <el-select v-model="channelsConfigData.status">
+                        <el-option label="true" :value="true"></el-option>
+                        <el-option label="false" :value="false"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="channelNumber">
+                    <el-input v-model="channelsConfigData.channelNumber"></el-input>
+                </el-form-item>
+              </el-form>
                     <!-- <el-tree
                     :data="data"
                     node-key="id"
@@ -103,13 +144,12 @@ export default {
     }]
     return {
       jsonData: {},
-      paramsconfigData: [{
-        key: 1,
-        name: 'aiyaya'
-      }],
+      paramsconfigData: [],
+      channelsConfigData: {},
       fileList: [],
       tableData: [],
-      data: JSON.parse(JSON.stringify(data))
+      data: JSON.parse(JSON.stringify(data)),
+      activeName: 'paramsConfig'
     }
   },
   components: {
@@ -162,6 +202,10 @@ export default {
       let _z = fs.readFileSync(path, 'utf8')
       _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
       this.jsonData = _z
+      this.paramsconfigData = _z.paramsConfig
+      this.channelsConfigData = _z.channelsConfig
+      console.log(this.jsonData)
+    //   this.paramsconfigData = _z.
     //   fs.readFile(path, function (err, data) {
     //     if (err) {
     //       return console.error(err)
@@ -170,7 +214,8 @@ export default {
     //     console.log('异步读取: ' + data.toString())
     //   })
     // }
-    }
+    },
+    handleClick () {}
   }
 }
 </script>
