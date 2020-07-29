@@ -20,16 +20,18 @@
                 :auto-upload="false">
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
+            <div>
             <el-button size="small" type="primary" @click="importJson">生成json</el-button>
+            </div>
         </div>
         <div style="display: flex;">
             <div class="left-page">
-                    <json-viewer
-                :value="jsonData"
-                :expand-depth=10
-                copyable
-                boxed>
-            </json-viewer>
+                <json-viewer
+                    :value="jsonData"
+                    :expand-depth=10
+                    copyable
+                    boxed>
+                </json-viewer>
             </div>
             <div class="right-page">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -80,7 +82,15 @@
                     label="validate"
                     width="100">
                 </el-table-column>
-                <!-- validate -->
+                 <el-table-column
+                fixed="right"
+                label="操作"
+                width="100">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="editParams(scope)">编辑</el-button>
+                    <el-button type="text" size="small" @click="deleteParams(scope)">删除</el-button>
+                </template>
+                </el-table-column>
               </el-table>
               <el-form ref="form" :model="channelsConfigData" label-width="100px" v-if="activeName == 'channelsConfig'">
                 <el-form-item label="status">
@@ -90,46 +100,53 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="channelNumber">
-                    <el-input v-model="channelsConfigData.channelNumber"></el-input>
+                    <el-input-number v-model="channelsConfigData.channelNumber"></el-input-number>
                 </el-form-item>
               </el-form>
-                    <!-- <el-tree
-                    :data="data"
-                    node-key="id"
-                    default-expand-all
-                    :expand-on-click-node="false">
-                    <span class="custom-tree-node" slot-scope="{ node, data }">
-                        <span>
-                            <el-input size="small" placeholder="key"></el-input>
-                        </span>
-                        <span>
-                            <el-input size="small" placeholder="value"></el-input>
-                        </span>
-                        <span>
-                            <el-button
-                                type="text"
-                                size="mini"
-                                @click="() => append(data)">
-                                新增
-                            </el-button>
-                            <el-button
-                                type="text"
-                                size="mini"
-                                @click="() => remove(node, data)">
-                                删除
-                            </el-button>
-                        </span>
-                    </span>
-                    </el-tree> -->
             </div>
         </div>
+        <!-- 修改paramsConfig -->
+        <el-dialog title="paramsConfig配置" :visible.sync="dialogFormVisible" class="dialog-form">
+            <el-form :model="paramsconfigForm">
+                <el-form-item label="key" label-width="100px">
+                    <el-input v-model="paramsconfigForm.key" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="name" label-width="100px">
+                    <el-input v-model="paramsconfigForm.name" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="flex" label-width="100px">
+                    <el-input v-model="paramsconfigForm.flex" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="prefix" label-width="100px">
+                    <el-input v-model="paramsconfigForm.prefix" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="options" label-width="100px">
+                    <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="increase" label-width="100px">
+                    <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="validate" label-width="100px">
+                    <el-input v-model="paramsconfigForm.validate" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="活动区域" :label-width="formLabelWidth">
+                <el-select v-model="form.region" placeholder="请选择活动区域">
+                    <el-option label="区域一" value="shanghai"></el-option>
+                    <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+                </el-form-item> -->
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false" size="small">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false" size="small">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
 import JsonViewer from 'vue-json-viewer'
 const fs = require('fs')
 
-let id = 1000
 export default {
   data () {
     const data = [{
@@ -149,7 +166,9 @@ export default {
       fileList: [],
       tableData: [],
       data: JSON.parse(JSON.stringify(data)),
-      activeName: 'paramsConfig'
+      activeName: 'paramsConfig',
+      dialogFormVisible: false,
+      paramsconfigForm: {}
     }
   },
   components: {
@@ -159,21 +178,7 @@ export default {
     onJsonChange (value) {
       console.log('value:', value)
     },
-    append (data) {
-      console.log(data.$treeNodeId)
-      const newChild = { id: id++, label: 'testtest', children: [] }
-      if (!data.children) {
-        this.$set(data, 'children', [])
-      }
-      data.children.push(newChild)
-    },
 
-    remove (node, data) {
-      const parent = node.parent
-      const children = parent.data.children || parent.data
-      const index = children.findIndex(d => d.id === data.id)
-      children.splice(index, 1)
-    },
     importJson () {
       fs.readFile('config1.json', function (err, data) {
         if (err) {
@@ -215,7 +220,32 @@ export default {
     //   })
     // }
     },
-    handleClick () {}
+    handleClick () {},
+    editParams (scope) {
+      console.log(scope.row)
+      this.paramsconfigForm = scope.row
+      this.dialogFormVisible = true
+    },
+    deleteParams (scope) {
+      console.log(scope.row)
+      this.$confirm('确定要删除该条配置信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let index = this.paramsconfigData.indexOf(scope.row)
+        this.paramsconfigData.splice(index, 1)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    }
   }
 }
 </script>
@@ -252,5 +282,10 @@ export default {
 }
 .jv-container .jv-code.boxed {
     max-height: 400px;
+}
+.dialog-form {
+   .el-form-item {
+       margin-bottom: 0;
+   } 
 }
 </style>
