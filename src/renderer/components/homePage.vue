@@ -1,12 +1,5 @@
 <template>
     <div class="main-page">
-         <!-- <vue-json-editor 
-         lang="zh"   
-         v-model="json" 
-         :show-btns="true" 
-         :expandedOnStart="true" 
-         @json-change="onJsonChange">
-         </vue-json-editor> -->
         <div style="margin-bottom: 10px;display:flex;justify-content:space-between;">
             <el-upload
                 :multiple="false"
@@ -28,7 +21,7 @@
             <div class="left-page">
                 <json-viewer
                     :value="jsonData"
-                    :expand-depth=10
+                    :expand-depth=5
                     copyable
                     boxed>
                 </json-viewer>
@@ -127,14 +120,14 @@
                     <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="validate" label-width="100px">
-                    <el-input v-model="paramsconfigForm.validate" size="small"  autocomplete="off"></el-input>
+                    <el-select v-model="paramsconfigForm.validate" size="small">
+                        <el-option label="Any-Number" value="Any-Number"></el-option>
+                        <el-option label="Number" value="Number"></el-option>
+                        <el-option label="CN" value="CN"></el-option>
+                        <el-option label="Number|EN" value="Number|EN"></el-option>
+                        <el-option label="EN" value="EN"></el-option>
+                    </el-select>
                 </el-form-item>
-                <!-- <el-form-item label="活动区域" :label-width="formLabelWidth">
-                <el-select v-model="form.region" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-                </el-form-item> -->
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false" size="small">取 消</el-button>
@@ -149,23 +142,12 @@ const fs = require('fs')
 
 export default {
   data () {
-    const data = [{
-      id: 1,
-      children: []
-    }, {
-      id: 2,
-      children: []
-    }, {
-      id: 3,
-      children: []
-    }]
     return {
       jsonData: {},
       paramsconfigData: [],
       channelsConfigData: {},
       fileList: [],
       tableData: [],
-      data: JSON.parse(JSON.stringify(data)),
       activeName: 'paramsConfig',
       dialogFormVisible: false,
       paramsconfigForm: {}
@@ -173,6 +155,12 @@ export default {
   },
   components: {
     JsonViewer
+  },
+  watch: {
+    jsonData (val) {
+      console.log('jsonData')
+      console.log(val)
+    }
   },
   methods: {
     onJsonChange (value) {
@@ -203,33 +191,33 @@ export default {
     handleChange (file) {
       console.log('handleChange')
       console.log(file.raw.path)
-      let path = file.raw.path
-      let _z = fs.readFileSync(path, 'utf8')
-      _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
-      this.jsonData = _z
-      this.paramsconfigData = _z.paramsConfig
-      this.channelsConfigData = _z.channelsConfig
-      console.log(this.jsonData)
-    //   this.paramsconfigData = _z.
-    //   fs.readFile(path, function (err, data) {
-    //     if (err) {
-    //       return console.error(err)
-    //     }
-    //     _this.jsonData = data.toString()
-    //     console.log('异步读取: ' + data.toString())
-    //   })
-    // }
+
+      try {
+        let path = file.raw.path
+        let _z = fs.readFileSync(path, 'utf8')
+        _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
+        this.jsonData = _z
+        this.paramsconfigData = _z.paramsConfig
+        this.channelsConfigData = _z.channelsConfig
+        console.log(this.jsonData)
+      } catch (error) {
+        this.$message.error('json格式有误，请检查')
+        console.log(error)
+      }
     },
     handleClick () {},
     editParams (scope) {
       console.log(scope.row)
-      this.paramsconfigForm = scope.row
+      let form = scope.row
+      form.options = JSON.parse(JSON.stringify(scope.row.options))
+      //   注意对象复制 会指向同一个地址
+      this.paramsconfigForm = JSON.parse(JSON.stringify(form))
       this.dialogFormVisible = true
     },
     deleteParams (scope) {
       console.log(scope.row)
       this.$confirm('确定要删除该条配置信息?', '提示', {
-        confirmButtonText: '确定',
+        confirmButtonText: '确定 ',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
