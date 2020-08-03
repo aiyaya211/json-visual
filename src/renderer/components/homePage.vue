@@ -45,36 +45,43 @@
                 :data="paramsconfigData"
                 style="width: 100%">
                 <el-table-column
+                    show-overflow-tooltip
                     prop="key"
                     label="key"
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    show-overflow-tooltip
                     prop="name"
                     label="name"
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    show-overflow-tooltip
                     prop="flex"
                     label="flex"
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    show-overflow-tooltip
                     prop="prefix"
                     label="prefix"
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    show-overflow-tooltip
                     prop="options"
                     label="options"
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    show-overflow-tooltip
                     prop="increase"
                     label="increase"
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    show-overflow-tooltip
                     prop="validate"
                     label="validate"
                     width="100">
@@ -291,8 +298,12 @@ export default {
       this.$nextTick(() => {
         this.$refs.tableDataRef.doLayout()
       })
+      console.log('this.paramsconfigData')
+      console.log(this.paramsconfigData)
 
-      // this.$set(this.jsonData, 'paramsConfig', )
+      this.$set(this.jsonData, 'paramsConfig', this.paramsconfigData)
+      console.log(this.jsonData)
+      console.log('this.jsonData')
       // if (this.paramsconfigForm.prefix === 'true') {
       //   this.$set(this.paramsconfigForm, 'prefix', 'true')
       // }
