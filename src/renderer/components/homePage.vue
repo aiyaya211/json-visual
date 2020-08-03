@@ -173,9 +173,12 @@ export default {
     JsonViewer
   },
   watch: {
-    jsonData (val) {
-      console.log('jsonData')
-      console.log(val)
+    jsonData: {
+      handler (val) {
+        console.log(val)
+        console.log('77777')
+      },
+      deep: true
     }
   },
   methods: {
@@ -284,24 +287,29 @@ export default {
       })
     },
     submitParamsConfig () {
-      console.log(this.paramsconfigForm)
-      console.log(9999)
-      console.log(this.paramsconfigData[this.paramsIndex])
-      this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
-
-      let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
-      console.log(optionsArr)
-      this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
-      console.log('this.paramsconfigData')
-      console.log(this.paramsconfigData)
-      this.dialogFormVisible = false
-      this.$nextTick(() => {
-        this.$refs.tableDataRef.doLayout()
-      })
-      console.log('this.paramsconfigData')
-      console.log(this.paramsconfigData)
-
-      this.$set(this.jsonData, 'paramsConfig', this.paramsconfigData)
+      try {
+        this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
+        let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
+        this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
+        // this.$set(this.jsonData, 'paramsConfig', this.paramsconfigData)
+        this.jsonData = Object.assign({}, this.jsonData, this.paramsconfigData)
+        this.dialogFormVisible = false
+        this.$nextTick(() => {
+          this.$refs.tableDataRef.doLayout()
+        })
+        setTimeout(() => {
+          this.$message({
+            message: '修改params参数成功',
+            type: 'success'
+          })
+        }, 500)
+      } catch (err) {
+        console.log(err)
+        this.$message({
+          message: '修改params参数失败',
+          type: 'error'
+        })
+      }
       console.log(this.jsonData)
       console.log('this.jsonData')
       // if (this.paramsconfigForm.prefix === 'true') {
