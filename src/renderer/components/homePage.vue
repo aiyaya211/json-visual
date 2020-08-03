@@ -40,6 +40,7 @@
                 </el-tabs>
                 <!-- paramsconfig -->
                <el-table
+                ref="tableDataRef"
                 v-if="activeName == 'paramsConfig'"
                 :data="paramsconfigData"
                 style="width: 100%">
@@ -134,9 +135,11 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false" size="small">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false" size="small">确 定</el-button>
+                <el-button type="primary" @click="submitParamsConfig" size="small">确 定</el-button>
             </div>
         </el-dialog>
+        <!-- 界面预览 -->
+        <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form"></el-dialog>
     </div>
 </template>
 <script>
@@ -153,8 +156,10 @@ export default {
       tableData: [],
       activeName: 'paramsConfig',
       dialogFormVisible: false,
+      previewVisible: false,
       paramsconfigForm: {},
-      optionsStr: ''
+      optionsStr: '',
+      paramsIndex: 0
     }
   },
   components: {
@@ -182,9 +187,7 @@ export default {
       })
     },
     preview () {
-      this.$router.push({
-        path: '/preview'
-      })
+      this.previewVisible = true
     },
     initData () {
       this.jsonData = {}
@@ -214,6 +217,8 @@ export default {
         _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
         this.jsonData = _z
         this.paramsconfigData = _z.paramsConfig
+        console.log(this.paramsconfigData)
+        console.log('this.paramsconfigData')
         this.channelsConfigData = _z.channelsConfig
         console.log(this.jsonData)
       } catch (error) {
@@ -223,21 +228,32 @@ export default {
     },
     handleClick () {},
     editParams (scope) {
-      console.log(scope.row.options)
+      console.log(scope)
+      this.paramsIndex = scope.$index
+      this.paramsconfigForm = Object.assign({}, scope.row)
       let _this = this
+      _this.optionsStr = ''
       scope.row.options.forEach(item => {
         _this.optionsStr += item + ','
       })
+      this.$set(this.paramsconfigForm, 'options', this.optionsStr)
+      if (scope.row.prefix === true) {
+        this.$set(this.paramsconfigForm, 'prefix', 'true')
+      }
+      if (scope.row.prefix === false) {
+        this.$set(this.paramsconfigForm, 'prefix', 'false')
+      }
       console.log(this.optionsStr)
-      let form = scope.row
-      form.options = this.optionsStr
+      console.log(this.paramsIndex)
+      // let form = scope.row
+      // form.options = this.optionsStr
       // scope.row.options.forEach(item => {
       //   form.options += item
       // })
       // console.log(form.options)
       // console.log(Array.prototype.isPrototypeOf(form.options))
       //   注意对象复制 会指向同一个地址
-      this.paramsconfigForm = JSON.parse(JSON.stringify(form))
+      // this.paramsconfigForm = JSON.parse(JSON.stringify(form))
       this.dialogFormVisible = true
     },
     deleteParams (scope) {
@@ -259,6 +275,30 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    submitParamsConfig () {
+      console.log(this.paramsconfigForm)
+      console.log(9999)
+      console.log(this.paramsconfigData[this.paramsIndex])
+      this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
+
+      let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
+      console.log(optionsArr)
+      this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
+      console.log('this.paramsconfigData')
+      console.log(this.paramsconfigData)
+      this.dialogFormVisible = false
+      this.$nextTick(() => {
+        this.$refs.tableDataRef.doLayout()
+      })
+
+      // this.$set(this.jsonData, 'paramsConfig', )
+      // if (this.paramsconfigForm.prefix === 'true') {
+      //   this.$set(this.paramsconfigForm, 'prefix', 'true')
+      // }
+      // if (this.paramsconfigForm.prefix === 'false') {
+      //   this.$set(this.paramsconfigForm, 'prefix', 'false')
+      // }
     }
   }
 }
