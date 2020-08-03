@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/homePage').default
     },
     {
+      path: '/preview',
+      name: 'preview-page',
+      component: require('@/components/previewPage').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

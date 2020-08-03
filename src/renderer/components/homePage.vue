@@ -10,14 +10,17 @@
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :file-list="fileList"
-                :auto-upload="false">
+                :auto-upload="false"
+                :limit="1">
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
             <div>
-            <el-button size="small" type="primary" @click="importJson">生成json</el-button>
+              <el-button size="small" type="primary" @click="importJson">生成json</el-button>
+              <el-button size="small" type="primary" @click="preview">界面预览</el-button>
             </div>
         </div>
         <div style="display: flex;">
+          <!-- json预览 -->
             <div class="left-page">
                 <json-viewer
                     :value="jsonData"
@@ -150,7 +153,8 @@ export default {
       tableData: [],
       activeName: 'paramsConfig',
       dialogFormVisible: false,
-      paramsconfigForm: {}
+      paramsconfigForm: {},
+      optionsStr: ''
     }
   },
   components: {
@@ -177,21 +181,33 @@ export default {
         console.log('异步读取: ' + _z)
       })
     },
+    preview () {
+      this.$router.push({
+        path: '/preview'
+      })
+    },
+    initData () {
+      this.jsonData = {}
+      this.paramsconfigData = []
+    },
     submitUpload () {
       this.$refs.upload.submit()
     },
     handleRemove (file, fileList) {
       console.log('handleRemove')
       console.log(file, fileList)
+      this.initData()
     },
     handlePreview (file) {
       console.log('handlePreview1')
       console.log(file.path)
     },
-    handleChange (file) {
+    handleChange (file, fileList) {
       console.log('handleChange')
       console.log(file.raw.path)
-
+      if (fileList.length > 0) {
+        this.fileList = [fileList[fileList.length - 1]]
+      }
       try {
         let path = file.raw.path
         let _z = fs.readFileSync(path, 'utf8')
@@ -207,9 +223,19 @@ export default {
     },
     handleClick () {},
     editParams (scope) {
-      console.log(scope.row)
+      console.log(scope.row.options)
+      let _this = this
+      scope.row.options.forEach(item => {
+        _this.optionsStr += item + ','
+      })
+      console.log(this.optionsStr)
       let form = scope.row
-      form.options = JSON.parse(JSON.stringify(scope.row.options))
+      form.options = this.optionsStr
+      // scope.row.options.forEach(item => {
+      //   form.options += item
+      // })
+      // console.log(form.options)
+      // console.log(Array.prototype.isPrototypeOf(form.options))
       //   注意对象复制 会指向同一个地址
       this.paramsconfigForm = JSON.parse(JSON.stringify(form))
       this.dialogFormVisible = true
