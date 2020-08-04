@@ -173,7 +173,7 @@
                     <el-button type="danger" size="small" style="margin-left: 10px;" @click="deleteWebconfig(item)">删除</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" size="small" style="margin-left: 10px" @click="addWebconfig()">新增</el-button>
+                    <el-button type="primary" size="small" style="margin-left: 10px" @click="addWebconfig">新增</el-button>
                     <el-button type="primary" size="small" style="margin-left: 10px" @click="submitWebConfig">保存</el-button>
                 </el-form-item>
               </el-form>
@@ -484,6 +484,21 @@ export default {
     submitWebConfig () {
       console.log(this.webConfigData)
       console.log('webConfigData')
+      try {
+        this.$set(this.jsonData, 'webConfig', this.webConfigData)
+        setTimeout(() => {
+          this.$message({
+            message: '修改webconfig参数成功',
+            type: 'success'
+          })
+        }, 500)
+      } catch (err) {
+        console.log(err)
+        this.$message({
+          message: '修改webconfig参数失败',
+          type: 'error'
+        })
+      }
     },
     formatterPrefix (row, column) {
       if (row.prefix === true || row.prefix === 'true') {
