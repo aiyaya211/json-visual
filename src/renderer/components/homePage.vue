@@ -157,6 +157,24 @@
                     <el-button type="primary" @click="submitBackendConfig">保存</el-button>
                 </el-form-item>
               </el-form>
+              <!-- webConfig -->
+              <el-form  v-if="activeName == 'webConfig'">
+                <el-form-item v-for="item in webConfigData" style="margin-left:10px;">
+                    <el-select multiple placeholder="请选择" v-model="item.value">
+                      <el-option
+                          v-for="(item,index) in paramsconfigData"
+                          :key="index"
+                          :label="item.name"
+                          :value="index">
+                        </el-option>
+                    </el-select>
+                    <el-checkbox v-model="item.status">自增</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" size="small" style="margin-left: 10px">新增</el-button>
+                    <el-button type="primary" size="small" style="margin-left: 10px" @click="submitWebConfig">保存</el-button>
+                </el-form-item>
+              </el-form>
             </div>
         </div>
         <!-- 修改paramsConfig -->
@@ -215,45 +233,7 @@
                 </div>
               </div>
             </div>
-          </div>
-             <!-- <div v-if="jsonData.increase.length<2 && jsonData.increase">
-                <div> {{$t('home.continuousPrint')}}</div>
-                <div style="margin-left:26px">
-                  <span><i class="el-icon-minus"></i></span>
-                  <el-input maxlength="3"></el-input>
-                  <span> <i class="el-icon-plus"></i></span>
-                </div>
-             </div> -->
-           <!-- <div class="left">
-            <div  class="leftIem" v-for="(item,index) in jsonData.webConfig" :key="index">
-              <div class="row-box"  v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}">
-                <el-select v-if="jsonData.paramsConfig[value].options.length>0" placeholder="请选择">
-                  <el-option
-                    v-for="item in jsonData.paramsConfig[value].options"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                  </el-option>
-                </el-select>
-                <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix"></el-input>
-              </div>
-              <div v-if="jsonData.increase.length >1">
-                <el-input v-show="item.status"  maxlength="3" class="count" size="mini"/>  
-                <el-checkbox v-show="item.status">自增</el-checkbox>
-              </div>
-            </div>
-            <div  class="leftIem"  v-if="jsonData.increase.length<2">
-              <div class="hierarchy">
-                <div class="hierarchy-title"> 111</div>
-                <div class="el-input-number" style="margin-left:26px">
-                  <span class="el-input-number__decrease"><i class="el-icon-minus"></i></span>
-                  <el-input maxlength="3"></el-input>
-                  <span class="el-input-number__increase"> <i class="el-icon-plus"></i></span>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          
+          </div>  
         </el-dialog>
     </div>
 </template>
@@ -270,6 +250,7 @@ export default {
       increaseConfigData: {},
       scannerConfigData: {},
       backendConfigData: {},
+      webConfigData: [],
       fileList: [],
       tableData: [],
       activeName: 'paramsConfig',
@@ -341,6 +322,9 @@ export default {
         this.channelsConfigData = Object.assign({}, _z.channelsConfig)
         this.scannerConfigData = Object.assign({}, _z.scannerConfig)
         this.backendConfigData = Object.assign({}, _z.backendConfig)
+        this.webConfigData = Object.assign({}, _z.webConfig)
+        console.log('webConfigData')
+        console.log(this.webConfigData)
         console.log('jsonData')
         console.log(this.jsonData.increase)
       } catch (error) {
@@ -479,6 +463,10 @@ export default {
           type: 'error'
         })
       }
+    },
+    submitWebConfig () {
+      console.log(this.webConfigData)
+      console.log('webConfigData')
     }
   }
 }
