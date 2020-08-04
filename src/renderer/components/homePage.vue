@@ -15,7 +15,7 @@
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
             <div>
-              <el-button size="small" type="primary" @click="importJson">生成json</el-button>
+              <el-button size="small" type="primary">生成json</el-button>
               <el-button size="small" type="primary" @click="preview">界面预览</el-button>
             </div>
         </div>
@@ -96,6 +96,7 @@
                 </template>
                 </el-table-column>
               </el-table>
+              <!-- channelsConfig -->
               <el-form ref="form" :model="channelsConfigData" label-width="100px" v-if="activeName == 'channelsConfig'">
                 <el-form-item label="status">
                     <el-select v-model="channelsConfigData.status">
@@ -103,8 +104,57 @@
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="channelNumber">
+                <el-form-item label="channels">
                     <el-input-number v-model="channelsConfigData.channelNumber"></el-input-number>
+                </el-form-item>
+                 <el-form-item>
+                    <el-button type="primary" @click="submitChannelConfig">保存</el-button>
+                </el-form-item>
+              </el-form>
+              <!-- scannerConfig -->
+              <el-form ref="form" :model="scannerConfigData" label-width="100px" v-if="activeName == 'scannerConfig'">
+                <el-form-item label="connector">
+                    <el-input v-model="scannerConfigData.connector" style="width: 100px"></el-input>
+                </el-form-item>
+                <el-form-item label="qrcode">
+                    <el-select v-model="scannerConfigData.qrcode" multiple placeholder="请选择">
+                      <el-option
+                         v-for="(item,index) in paramsconfigData"
+                        :key="index"
+                        :label="item.name"
+                        :value="index">
+                      </el-option>
+                    </el-select>
+                    <!-- <el-input v-model="scannerConfigData.connector" style="width: 100px"></el-input> -->
+                </el-form-item>
+                 <el-form-item>
+                    <el-button type="primary" @click="submitScannerConfig">保存</el-button>
+                </el-form-item>
+              </el-form>
+              <!-- backendConfig -->
+               <el-form ref="form" :model="backendConfigData" label-width="100px" v-if="activeName == 'backendConfig'">
+                <el-form-item label="qrpadding">
+                    <el-input v-model="backendConfigData.qrpadding" style="width: 150px"></el-input>
+                </el-form-item>
+                <el-form-item label="connector">
+                    <el-input v-model="backendConfigData.connector" style="width: 150px"></el-input>
+                </el-form-item>
+                <el-form-item label="qrcode">
+                    <el-select v-model="backendConfigData.qrcode" multiple placeholder="请选择">
+                      <el-option
+                         v-for="(item,index) in paramsconfigData"
+                        :key="index"
+                        :label="item.name"
+                        :value="index">
+                      </el-option>
+                    </el-select>
+                    <!-- <el-input v-model="scannerConfigData.connector" style="width: 100px"></el-input> -->
+                </el-form-item>
+                <el-form-item label="note">
+                    <el-input v-model="backendConfigData.note" style="width: 150px"></el-input>
+                </el-form-item>
+                 <el-form-item>
+                    <el-button type="primary" @click="submitBackendConfig">保存</el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -146,7 +196,65 @@
             </div>
         </el-dialog>
         <!-- 界面预览 -->
-        <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form"></el-dialog>
+        <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form">
+          <div  v-if="jsonData">
+            <div v-for="(item, index) in jsonData.webConfig" :key="index">
+              <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}">
+                 <el-select v-if="jsonData.paramsConfig[value].options.length>0"  :placeholder="jsonData.paramsConfig[value].name" style="width: 200px;margin-top: 10px;">
+                  <el-option
+                    v-for="item in jsonData.paramsConfig[value].options"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+                  </el-option>
+                </el-select>
+                <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix" style="width: 200px;margin-top: 10px;"></el-input>
+                <!-- <div v-if="jsonData.increase">
+                  <el-input v-show="item.status"  maxlength="3" size="mini"/>  
+                  <el-checkbox v-show="item.status">自增</el-checkbox>
+                </div> -->
+              </div>
+            </div>
+          </div>
+             <!-- <div v-if="jsonData.increase.length<2 && jsonData.increase">
+                <div> {{$t('home.continuousPrint')}}</div>
+                <div style="margin-left:26px">
+                  <span><i class="el-icon-minus"></i></span>
+                  <el-input maxlength="3"></el-input>
+                  <span> <i class="el-icon-plus"></i></span>
+                </div>
+             </div> -->
+           <!-- <div class="left">
+            <div  class="leftIem" v-for="(item,index) in jsonData.webConfig" :key="index">
+              <div class="row-box"  v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}">
+                <el-select v-if="jsonData.paramsConfig[value].options.length>0" placeholder="请选择">
+                  <el-option
+                    v-for="item in jsonData.paramsConfig[value].options"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+                  </el-option>
+                </el-select>
+                <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix"></el-input>
+              </div>
+              <div v-if="jsonData.increase.length >1">
+                <el-input v-show="item.status"  maxlength="3" class="count" size="mini"/>  
+                <el-checkbox v-show="item.status">自增</el-checkbox>
+              </div>
+            </div>
+            <div  class="leftIem"  v-if="jsonData.increase.length<2">
+              <div class="hierarchy">
+                <div class="hierarchy-title"> 111</div>
+                <div class="el-input-number" style="margin-left:26px">
+                  <span class="el-input-number__decrease"><i class="el-icon-minus"></i></span>
+                  <el-input maxlength="3"></el-input>
+                  <span class="el-input-number__increase"> <i class="el-icon-plus"></i></span>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -159,6 +267,9 @@ export default {
       jsonData: {},
       paramsconfigData: [],
       channelsConfigData: {},
+      increaseConfigData: {},
+      scannerConfigData: {},
+      backendConfigData: {},
       fileList: [],
       tableData: [],
       activeName: 'paramsConfig',
@@ -227,16 +338,22 @@ export default {
         _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
         this.jsonData = _z
         this.paramsconfigData = _z.paramsConfig
-        console.log(this.paramsconfigData)
-        console.log('this.paramsconfigData')
-        this.channelsConfigData = _z.channelsConfig
-        console.log(this.jsonData)
+        this.channelsConfigData = Object.assign({}, _z.channelsConfig)
+        this.scannerConfigData = Object.assign({}, _z.scannerConfig)
+        this.backendConfigData = Object.assign({}, _z.backendConfig)
+        console.log('jsonData')
+        console.log(this.jsonData.increase)
       } catch (error) {
         this.$message.error('json格式有误，请检查')
         console.log(error)
       }
     },
-    handleClick () {},
+    handleClick () {
+      this.paramsconfigData = this.jsonData.paramsConfig
+      this.channelsConfigData = Object.assign({}, this.jsonData.channelsConfig)
+      this.scannerConfigData = Object.assign({}, this.jsonData.scannerConfig)
+      this.backendConfigData = Object.assign({}, this.jsonData.backendConfig)
+    },
     editParams (scope) {
       console.log(scope)
       this.paramsIndex = scope.$index
@@ -318,6 +435,60 @@ export default {
       // if (this.paramsconfigForm.prefix === 'false') {
       //   this.$set(this.paramsconfigForm, 'prefix', 'false')
       // }
+    },
+    submitChannelConfig () {
+      console.log(this.channelsConfigData)
+      console.log('channelsConfigData')
+      try {
+        this.$set(this.jsonData, 'channelsConfig', this.channelsConfigData)
+        setTimeout(() => {
+          this.$message({
+            message: '修改channles参数成功',
+            type: 'success'
+          })
+        }, 500)
+      } catch (err) {
+        console.log(err)
+        this.$message({
+          message: '修改channles参数失败',
+          type: 'error'
+        })
+      }
+    },
+    submitScannerConfig () {
+      console.log(this.scannerConfigData)
+      try {
+        this.$set(this.jsonData, 'scannerConfig', this.scannerConfigData)
+        setTimeout(() => {
+          this.$message({
+            message: '修改scanner参数成功',
+            type: 'success'
+          })
+        }, 500)
+      } catch (err) {
+        console.log(err)
+        this.$message({
+          message: '修改scanner参数失败',
+          type: 'error'
+        })
+      }
+    },
+    submitBackendConfig () {
+      try {
+        this.$set(this.jsonData, 'backendConfig', this.backendConfigData)
+        setTimeout(() => {
+          this.$message({
+            message: '修改backend参数成功',
+            type: 'success'
+          })
+        }, 500)
+      } catch (err) {
+        console.log(err)
+        this.$message({
+          message: '修改backend参数失败',
+          type: 'error'
+        })
+      }
     }
   }
 }
