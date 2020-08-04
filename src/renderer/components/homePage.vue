@@ -15,7 +15,7 @@
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
             <div>
-              <el-button size="small" type="primary">生成json</el-button>
+              <el-button size="small" type="primary">导出文件</el-button>
               <el-button size="small" type="primary" @click="preview">界面预览</el-button>
             </div>
         </div>
@@ -199,8 +199,8 @@
         <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form">
           <div  v-if="jsonData">
             <div v-for="(item, index) in jsonData.webConfig" :key="index">
-              <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}">
-                 <el-select v-if="jsonData.paramsConfig[value].options.length>0"  :placeholder="jsonData.paramsConfig[value].name" style="width: 200px;margin-top: 10px;">
+              <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" style="display: flex;align-items:center;">
+                 <el-select v-if="jsonData.paramsConfig[value].options.length>0"  :placeholder="jsonData.paramsConfig[value].name" style="width: 200px;margin-bottom: 10px;">
                   <el-option
                     v-for="item in jsonData.paramsConfig[value].options"
                     :key="item"
@@ -208,11 +208,11 @@
                     :value="item">
                   </el-option>
                 </el-select>
-                <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix" style="width: 200px;margin-top: 10px;"></el-input>
-                <!-- <div v-if="jsonData.increase">
-                  <el-input v-show="item.status"  maxlength="3" size="mini"/>  
-                  <el-checkbox v-show="item.status">自增</el-checkbox>
-                </div> -->
+                <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix" style="width: 200px;margin-bottom: 10px;"></el-input>
+                <div v-if="jsonData.increase" style="display: flex;align-items:center;">
+                  <el-input v-show="item.status"  maxlength="3" size="mini" style="width: 100px;margin-left: 10px;"/>  
+                  <el-checkbox v-show="item.status" style="margin-left: 10px;">自增</el-checkbox>
+                </div>
               </div>
             </div>
           </div>
@@ -372,15 +372,6 @@ export default {
       }
       console.log(this.optionsStr)
       console.log(this.paramsIndex)
-      // let form = scope.row
-      // form.options = this.optionsStr
-      // scope.row.options.forEach(item => {
-      //   form.options += item
-      // })
-      // console.log(form.options)
-      // console.log(Array.prototype.isPrototypeOf(form.options))
-      //   注意对象复制 会指向同一个地址
-      // this.paramsconfigForm = JSON.parse(JSON.stringify(form))
       this.dialogFormVisible = true
     },
     deleteParams (scope) {
@@ -408,8 +399,13 @@ export default {
         this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
         let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
         this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
-        // this.$set(this.jsonData, 'paramsConfig', this.paramsconfigData)
-        this.jsonData = Object.assign({}, this.jsonData, this.paramsconfigData)
+        this.$set(this.jsonData, 'paramsConfig', this.paramsconfigData)
+        if (this.paramsconfigData.prefix === 'true') {
+          this.$set(this.jsonData, 'prefix', 'true')
+        }
+        if (this.paramsconfigData.prefix === 'false') {
+          this.$set(this.jsonData, 'prefix', 'false')
+        }
         this.dialogFormVisible = false
         this.$nextTick(() => {
           this.$refs.tableDataRef.doLayout()
@@ -429,12 +425,6 @@ export default {
       }
       console.log(this.jsonData)
       console.log('this.jsonData')
-      // if (this.paramsconfigForm.prefix === 'true') {
-      //   this.$set(this.paramsconfigForm, 'prefix', 'true')
-      // }
-      // if (this.paramsconfigForm.prefix === 'false') {
-      //   this.$set(this.paramsconfigForm, 'prefix', 'false')
-      // }
     },
     submitChannelConfig () {
       console.log(this.channelsConfigData)
