@@ -66,7 +66,8 @@
                     show-overflow-tooltip
                     prop="prefix"
                     label="prefix"
-                    width="100">
+                    width="100"
+                    :formatter="formatterPrefix">
                 </el-table-column>
                 <el-table-column
                     show-overflow-tooltip
@@ -169,9 +170,10 @@
                         </el-option>
                     </el-select>
                     <el-checkbox v-model="item.status">自增</el-checkbox>
+                    <el-button type="danger" size="small" style="margin-left: 10px;" @click="deleteWebconfig(item)">删除</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" size="small" style="margin-left: 10px">新增</el-button>
+                    <el-button type="primary" size="small" style="margin-left: 10px" @click="addWebconfig()">新增</el-button>
                     <el-button type="primary" size="small" style="margin-left: 10px" @click="submitWebConfig">保存</el-button>
                 </el-form-item>
               </el-form>
@@ -322,7 +324,7 @@ export default {
         this.channelsConfigData = Object.assign({}, _z.channelsConfig)
         this.scannerConfigData = Object.assign({}, _z.scannerConfig)
         this.backendConfigData = Object.assign({}, _z.backendConfig)
-        this.webConfigData = Object.assign({}, _z.webConfig)
+        this.webConfigData = _z.webConfig
         console.log('webConfigData')
         console.log(this.webConfigData)
         console.log('jsonData')
@@ -378,6 +380,19 @@ export default {
         })
       })
     },
+    deleteWebconfig (row) {
+      let index = this.webConfigData.indexOf(row)
+      this.webConfigData.splice(index, 1)
+      console.log('row')
+      console.log(row)
+      console.log(this.webConfigData)
+    },
+    addWebconfig () {
+      this.webConfigData.push({
+        value: [],
+        status: false
+      })
+    },
     submitParamsConfig () {
       try {
         this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
@@ -390,6 +405,8 @@ export default {
         if (this.paramsconfigData.prefix === 'false') {
           this.$set(this.jsonData, 'prefix', 'false')
         }
+        console.log(this.jsonData)
+        console.log('jsonData')
         this.dialogFormVisible = false
         this.$nextTick(() => {
           this.$refs.tableDataRef.doLayout()
@@ -467,6 +484,14 @@ export default {
     submitWebConfig () {
       console.log(this.webConfigData)
       console.log('webConfigData')
+    },
+    formatterPrefix (row, column) {
+      if (row.prefix === true || row.prefix === 'true') {
+        return row.prefix + ''
+      }
+      if (row.prefix === false || row.prefix === 'false') {
+        return row.prefix + ''
+      }
     }
   }
 }

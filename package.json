@@ -59,6 +59,8 @@
     "axios": "^0.18.0",
     "element-ui": "^2.13.2",
     "json-schema-editor-visual": "^1.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-json-editor": "^1.4.2",
