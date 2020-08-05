@@ -319,29 +319,26 @@ export default {
         let path = file.raw.path
         let _z = fs.readFileSync(path, 'utf8')
         _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
+        // 此处需要用深拷贝
         this.jsonData = _z
-        this.paramsconfigData = _z.paramsConfig
-        this.channelsConfigData = Object.assign({}, _z.channelsConfig)
-        this.scannerConfigData = Object.assign({}, _z.scannerConfig)
-        this.backendConfigData = Object.assign({}, _z.backendConfig)
-        this.webConfigData = _z.webConfig
-        console.log('webConfigData')
-        console.log(this.webConfigData)
-        console.log('jsonData')
-        console.log(this.jsonData.increase)
+        this.paramsconfigData = JSON.parse(JSON.stringify(_z.paramsConfig))
+        this.channelsConfigData = JSON.parse(JSON.stringify(_z.channelsConfig))
+        this.scannerConfigData = JSON.parse(JSON.stringify(_z.scannerConfig))
+        this.backendConfigData = JSON.parse(JSON.stringify(_z.backendConfig))
+        this.webConfigData = JSON.parse(JSON.stringify(_z.webConfig))
       } catch (error) {
         this.$message.error('json格式有误，请检查')
         console.log(error)
       }
     },
     handleClick () {
-      this.paramsconfigData = this.jsonData.paramsConfig
-      this.channelsConfigData = Object.assign({}, this.jsonData.channelsConfig)
-      this.scannerConfigData = Object.assign({}, this.jsonData.scannerConfig)
-      this.backendConfigData = Object.assign({}, this.jsonData.backendConfig)
+      this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
+      this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
+      this.scannerConfigData = JSON.parse(JSON.stringify(this.jsonData.scannerConfig))
+      this.backendConfigData = JSON.parse(JSON.stringify(this.jsonData.backendConfig))
+      this.webConfigData = JSON.parse(JSON.stringify(this.jsonData.webConfig))
     },
     editParams (scope) {
-      console.log(scope)
       this.paramsIndex = scope.$index
       this.paramsconfigForm = Object.assign({}, scope.row)
       let _this = this
@@ -356,8 +353,6 @@ export default {
       if (scope.row.prefix === false) {
         this.$set(this.paramsconfigForm, 'prefix', 'false')
       }
-      console.log(this.optionsStr)
-      console.log(this.paramsIndex)
       this.dialogFormVisible = true
     },
     deleteParams (scope) {
@@ -398,7 +393,11 @@ export default {
         this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
         let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
         this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
-        this.$set(this.jsonData, 'paramsConfig', this.paramsconfigData)
+        console.log(this.jsonData.paramsConfig)
+        for (let key in this.paramsconfigForm) {
+          console.log(key + '---' + this.paramsconfigForm[key])
+          this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
+        }
         if (this.paramsconfigData.prefix === 'true') {
           this.$set(this.jsonData, 'prefix', 'true')
         }
