@@ -17,6 +17,7 @@
             <div>
               <el-button size="small" type="primary">导出文件</el-button>
               <el-button size="small" type="primary" @click="preview">界面预览</el-button>
+              <el-button size="small" type="primary" v-if="activeName === 'paramsConfig'" @click="addParamsConfig">新增params配置</el-button>
             </div>
         </div>
         <div style="display: flex;">
@@ -34,7 +35,7 @@
                     <el-tab-pane label="paramsConfig" name="paramsConfig"></el-tab-pane>
                     <el-tab-pane label="channelsConfig" name="channelsConfig"></el-tab-pane>
                     <el-tab-pane label="webConfig" name="webConfig"></el-tab-pane>
-                    <el-tab-pane label="increase" name="increase"></el-tab-pane>
+                    <!-- <el-tab-pane label="increase" name="increase"></el-tab-pane> -->
                     <el-tab-pane label="scannerConfig" name="scannerConfig"></el-tab-pane>
                     <el-tab-pane label="backendConfig" name="backendConfig"></el-tab-pane>
                 </el-tabs>
@@ -265,7 +266,8 @@ export default {
       paramsconfigForm: {},
       optionsStr: '',
       paramsIndex: 0,
-      paramsOption: ''
+      paramsOption: '',
+      isEdit: true
     }
   },
   components: {
@@ -342,6 +344,8 @@ export default {
       }
     },
     handleClick () {
+      console.log(this.jsonData)
+      console.log('this.jsonData')
       if (this.jsonData) {
         this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
         this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
@@ -350,7 +354,13 @@ export default {
         this.webConfigData = JSON.parse(JSON.stringify(this.jsonData.webConfig))
       }
     },
+    addParamsConfig () {
+      this.isEdit = false
+      this.paramsconfigForm = {}
+      this.dialogFormVisible = true
+    },
     editParams (scope) {
+      this.isEdit = true
       this.paramsIndex = scope.$index
       this.paramsconfigForm = Object.assign({}, scope.row)
       let _this = this
@@ -401,35 +411,57 @@ export default {
       })
     },
     submitParamsConfig () {
-      try {
-        this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
-        let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
-        this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
-        for (let key in this.paramsconfigForm) {
-          if (key === 'options') {
-            this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, optionsArr)
-          } else if (key === 'flex' || key === 'increase') {
-            this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, parseInt(this.paramsconfigForm[key]))
-          } else {
-            this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
+      if (this.isEdit) {
+        try {
+          this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
+          let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
+          this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
+          for (let key in this.paramsconfigForm) {
+            if (key === 'options') {
+              this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, optionsArr)
+            } else if (key === 'flex' || key === 'increase') {
+              this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, parseInt(this.paramsconfigForm[key]))
+            } else {
+              this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
+            }
           }
-        }
-        this.dialogFormVisible = false
-        this.$nextTick(() => {
-          this.$refs.tableDataRef.doLayout()
-        })
-        setTimeout(() => {
-          this.$message({
-            message: '修改params参数成功',
-            type: 'success'
+          this.dialogFormVisible = false
+          this.$nextTick(() => {
+            this.$refs.tableDataRef.doLayout()
           })
-        }, 500)
-      } catch (err) {
-        console.log(err)
-        this.$message({
-          message: '修改params参数失败',
-          type: 'error'
-        })
+          setTimeout(() => {
+            this.$message({
+              message: '修改params参数成功',
+              type: 'success'
+            })
+          }, 500)
+        } catch (err) {
+          console.log(err)
+          this.$message({
+            message: '修改params参数失败',
+            type: 'error'
+          })
+        }
+      }
+      if (!this.isEdit) {
+        console.log(99999)
+        try {
+          console.log(this.paramsconfigForm)
+          console.log('paramsconfigForm')
+          let paramsconfigAddData = JSON.parse(JSON.stringify(this.paramsconfigForm))
+          let optionsArr = paramsconfigAddData.options ? paramsconfigAddData.options.split(',') : []
+          this.$set(paramsconfigAddData, 'options', optionsArr)
+          // this.paramsconfigData.
+          this.jsonData.paramsConfig.push(paramsconfigAddData)
+          this.paramsconfigData.push(paramsconfigAddData)
+          this.dialogFormVisible = false
+          this.$nextTick(() => {
+            this.$refs.tableDataRef.doLayout()
+          })
+        } catch (err) {
+          console.log(err)
+          console.log('err')
+        }
       }
     },
     submitChannelConfig () {
