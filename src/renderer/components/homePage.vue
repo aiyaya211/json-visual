@@ -15,7 +15,7 @@
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
             <div>
-              <el-button size="small" type="primary">导出文件</el-button>
+              <el-button size="small" type="primary" @click="exportJson">导出文件</el-button>
               <el-button size="small" type="primary" @click="preview">界面预览</el-button>
               <el-button size="small" type="primary" v-if="activeName === 'paramsConfig'" @click="addParamsConfig">新增params配置</el-button>
             </div>
@@ -267,7 +267,8 @@ export default {
       optionsStr: '',
       paramsIndex: 0,
       paramsOption: '',
-      isEdit: true
+      isEdit: true,
+      path: ''
     }
   },
   components: {
@@ -328,8 +329,8 @@ export default {
         this.fileList = [fileList[fileList.length - 1]]
       }
       try {
-        let path = file.raw.path
-        let _z = fs.readFileSync(path, 'utf8')
+        this.path = file.raw.path
+        let _z = fs.readFileSync(this.path, 'utf8')
         _z = JSON.parse(_z.replace(/^\uFEFF/, ''))
         // 此处需要用深拷贝
         this.jsonData = _z
@@ -545,6 +546,23 @@ export default {
       if (row.prefix === false || row.prefix === 'false') {
         return row.prefix + ''
       }
+    },
+    exportJson () {
+      console.log(this.path)
+      console.log('path')
+      console.log(this.jsonData)
+      let data = JSON.stringify(this.jsonData, null, 4)
+      fs.writeFileSync(this.path, data, (err) => {
+        if (err) {
+          console.log('err')
+          console.log(err)
+        } else {
+          this.$message({
+            message: '导出成功',
+            type: 'success'
+          })
+        }
+      })
     }
   }
 }
