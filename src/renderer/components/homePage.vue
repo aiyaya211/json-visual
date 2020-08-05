@@ -220,10 +220,14 @@
           <div  v-if="jsonData">
             <div v-for="(item, index) in jsonData.webConfig" :key="index">
               <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" style="display: flex;align-items:center;">
-                 <el-select v-if="jsonData.paramsConfig[value].options.length>0"  :placeholder="jsonData.paramsConfig[value].name" style="width: 200px;margin-bottom: 10px;">
+                <el-select 
+                   v-model="paramsOption"
+                   v-if="jsonData.paramsConfig[value].options.length>0"  
+                   :placeholder="jsonData.paramsConfig[value].name" 
+                   style="width: 200px;margin-bottom: 10px;">
                   <el-option
-                    v-for="item in jsonData.paramsConfig[value].options"
-                    :key="item"
+                    v-for="(item,key) in jsonData.paramsConfig[value].options"
+                    :key="key"
                     :label="item"
                     :value="item">
                   </el-option>
@@ -260,7 +264,8 @@ export default {
       previewVisible: false,
       paramsconfigForm: {},
       optionsStr: '',
-      paramsIndex: 0
+      paramsIndex: 0,
+      paramsOption: ''
     }
   },
   components: {
