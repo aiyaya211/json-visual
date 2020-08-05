@@ -160,7 +160,7 @@
               </el-form>
               <!-- webConfig -->
               <el-form  v-if="activeName == 'webConfig'">
-                <el-form-item v-for="item in webConfigData" style="margin-left:10px;">
+                <el-form-item v-for="(item,index) in webConfigData" :key="index" style="margin-left:10px;">
                     <el-select multiple placeholder="请选择" v-model="item.value">
                       <el-option
                           v-for="(item,index) in paramsconfigData"
@@ -296,6 +296,11 @@ export default {
     initData () {
       this.jsonData = {}
       this.paramsconfigData = []
+      this.channelsConfigData = {}
+      this.increaseConfigData = {}
+      this.scannerConfigData = {}
+      this.backendConfigData = {}
+      this.webConfigData = []
     },
     submitUpload () {
       this.$refs.upload.submit()
@@ -332,11 +337,13 @@ export default {
       }
     },
     handleClick () {
-      this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
-      this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
-      this.scannerConfigData = JSON.parse(JSON.stringify(this.jsonData.scannerConfig))
-      this.backendConfigData = JSON.parse(JSON.stringify(this.jsonData.backendConfig))
-      this.webConfigData = JSON.parse(JSON.stringify(this.jsonData.webConfig))
+      if (this.jsonData) {
+        this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
+        this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
+        this.scannerConfigData = JSON.parse(JSON.stringify(this.jsonData.scannerConfig))
+        this.backendConfigData = JSON.parse(JSON.stringify(this.jsonData.backendConfig))
+        this.webConfigData = JSON.parse(JSON.stringify(this.jsonData.webConfig))
+      }
     },
     editParams (scope) {
       this.paramsIndex = scope.$index
@@ -393,19 +400,15 @@ export default {
         this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
         let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
         this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
-        console.log(this.jsonData.paramsConfig)
         for (let key in this.paramsconfigForm) {
-          console.log(key + '---' + this.paramsconfigForm[key])
-          this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
+          if (key === 'options') {
+            this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, optionsArr)
+          } else if (key === 'flex' || key === 'increase') {
+            this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, parseInt(this.paramsconfigForm[key]))
+          } else {
+            this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
+          }
         }
-        if (this.paramsconfigData.prefix === 'true') {
-          this.$set(this.jsonData, 'prefix', 'true')
-        }
-        if (this.paramsconfigData.prefix === 'false') {
-          this.$set(this.jsonData, 'prefix', 'false')
-        }
-        console.log(this.jsonData)
-        console.log('jsonData')
         this.dialogFormVisible = false
         this.$nextTick(() => {
           this.$refs.tableDataRef.doLayout()
@@ -423,14 +426,12 @@ export default {
           type: 'error'
         })
       }
-      console.log(this.jsonData)
-      console.log('this.jsonData')
     },
     submitChannelConfig () {
-      console.log(this.channelsConfigData)
-      console.log('channelsConfigData')
       try {
-        this.$set(this.jsonData, 'channelsConfig', this.channelsConfigData)
+        for (let key in this.channelsConfigData) {
+          this.$set(this.jsonData.channelsConfig, key, this.channelsConfigData[key])
+        }
         setTimeout(() => {
           this.$message({
             message: '修改channles参数成功',
@@ -446,9 +447,10 @@ export default {
       }
     },
     submitScannerConfig () {
-      console.log(this.scannerConfigData)
       try {
-        this.$set(this.jsonData, 'scannerConfig', this.scannerConfigData)
+        for (let key in this.scannerConfigData) {
+          this.$set(this.jsonData.scannerConfig, key, this.scannerConfigData[key])
+        }
         setTimeout(() => {
           this.$message({
             message: '修改scanner参数成功',
@@ -465,7 +467,9 @@ export default {
     },
     submitBackendConfig () {
       try {
-        this.$set(this.jsonData, 'backendConfig', this.backendConfigData)
+        for (let key in this.backendConfigData) {
+          this.$set(this.jsonData.backendConfig, key, this.backendConfigData[key])
+        }
         setTimeout(() => {
           this.$message({
             message: '修改backend参数成功',
