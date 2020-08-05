@@ -485,10 +485,8 @@ export default {
       }
     },
     submitWebConfig () {
-      console.log(this.webConfigData)
-      console.log('webConfigData')
       try {
-        this.$set(this.jsonData, 'webConfig', this.webConfigData)
+        this.jsonData.webConfig = JSON.parse(JSON.stringify(this.webConfigData))
         setTimeout(() => {
           this.$message({
             message: '修改webconfig参数成功',
