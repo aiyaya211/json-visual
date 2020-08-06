@@ -72,6 +72,18 @@
                 </el-table-column>
                 <el-table-column
                     show-overflow-tooltip
+                    prop="tailvalue"
+                    label="tailvalue"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    show-overflow-tooltip
+                    prop="prevalue"
+                    label="prevalue"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    show-overflow-tooltip
                     prop="options"
                     label="options"
                     width="100">
@@ -194,6 +206,12 @@
                 </el-form-item>
                 <el-form-item label="prefix" label-width="100px">
                     <el-input v-model="paramsconfigForm.prefix" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="tailvalue" label-width="100px">
+                    <el-input v-model="paramsconfigForm.tailvalue" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="prevalue" label-width="100px">
+                    <el-input v-model="paramsconfigForm.prevalue" size="small"  autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="options" label-width="100px">
                     <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off"></el-input>
