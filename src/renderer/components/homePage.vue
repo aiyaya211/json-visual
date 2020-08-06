@@ -422,6 +422,8 @@ export default {
               this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, optionsArr)
             } else if (key === 'flex' || key === 'increase') {
               this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, parseInt(this.paramsconfigForm[key]))
+            } else if (key === 'prefix') {
+              this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, !!parseInt(this.paramsconfigForm[key]))
             } else {
               this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
             }
@@ -445,7 +447,6 @@ export default {
         }
       }
       if (!this.isEdit) {
-        console.log(99999)
         try {
           console.log(this.paramsconfigForm)
           console.log('paramsconfigForm')
@@ -460,6 +461,10 @@ export default {
             this.$refs.tableDataRef.doLayout()
           })
         } catch (err) {
+          this.$message({
+            message: '新增params参数失败',
+            type: 'error'
+          })
           console.log(err)
           console.log('err')
         }
@@ -548,19 +553,14 @@ export default {
       }
     },
     exportJson () {
-      console.log(this.path)
-      console.log('path')
-      console.log(this.jsonData)
+      console.log('exportJson')
       let data = JSON.stringify(this.jsonData, null, 4)
       fs.writeFileSync(this.path, data, (err) => {
         if (err) {
           console.log('err')
           console.log(err)
         } else {
-          this.$message({
-            message: '导出成功',
-            type: 'success'
-          })
+          console.log('导出成功')
         }
       })
     }
