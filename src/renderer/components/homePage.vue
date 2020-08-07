@@ -582,6 +582,28 @@ export default {
             type: 'success'
           })
         }, 500)
+        this.webConfigData.forEach((element, index) => {
+        // console.log(element.value)
+        // console.log('element')
+        // if (element.status) {
+        // // var increaseArr = []
+          this.increaseConfigData[index] = []
+          let _this = this
+          if (element.status) {
+            element.value.forEach(i => {
+              console.log(_this.paramsconfigData[i].increase)
+              console.log(i)
+              if (_this.paramsconfigData[i].increase === 1 || _this.paramsconfigData[i].increase === '1') {
+                console.log(i)
+                _this.increaseConfigData[index].push(i)
+              }
+            // console.log(this.paramsconfigData[i].increase)
+            })
+          }
+        })
+        for (let key in this.increaseConfigData) {
+          this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
+        }
       } catch (err) {
         console.log(err)
         this.$message({
