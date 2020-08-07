@@ -335,8 +335,6 @@ export default {
       this.$refs.upload.submit()
     },
     handleRemove (file, fileList) {
-      // console.log('handleRemove')
-      // console.log(file, fileList)
       this.initData()
     },
     handlePreview (file) {
@@ -344,8 +342,6 @@ export default {
       console.log(file.path)
     },
     handleChange (file, fileList) {
-      // console.log('handleChange')
-      // console.log(file.raw.path)
       if (fileList.length > 0) {
         this.fileList = [fileList[fileList.length - 1]]
       }
@@ -366,8 +362,6 @@ export default {
       }
     },
     handleClick () {
-      // console.log(this.jsonData)
-      // console.log('this.jsonData')
       if (this.jsonData) {
         this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
         this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
@@ -408,6 +402,7 @@ export default {
       }).then(() => {
         let index = this.paramsconfigData.indexOf(scope.row)
         this.paramsconfigData.splice(index, 1)
+        this.jsonData.paramsConfig.splice(index, 1)
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -422,9 +417,6 @@ export default {
     deleteWebconfig (row) {
       let index = this.webConfigData.indexOf(row)
       this.webConfigData.splice(index, 1)
-      // console.log('row')
-      // console.log(row)
-      // console.log(this.webConfigData)
     },
     addWebconfig () {
       this.webConfigData.push({
@@ -469,12 +461,9 @@ export default {
       }
       if (!this.isEdit) {
         try {
-          // console.log(this.paramsconfigForm)
-          // console.log('paramsconfigForm')
           let paramsconfigAddData = JSON.parse(JSON.stringify(this.paramsconfigForm))
           let optionsArr = paramsconfigAddData.options ? paramsconfigAddData.options.split(',') : []
           this.$set(paramsconfigAddData, 'options', optionsArr)
-          // this.paramsconfigData.
           this.jsonData.paramsConfig.push(paramsconfigAddData)
           this.paramsconfigData.push(paramsconfigAddData)
           this.dialogFormVisible = false
@@ -490,15 +479,7 @@ export default {
           console.log('err')
         }
       }
-      // this.paramsconfigData.forEach(item => {
-      //   console.log('paramsconfigData')
-      //   console.log(item)
-      // })
       this.webConfigData.forEach((element, index) => {
-        // console.log(element.value)
-        // console.log('element')
-        // if (element.status) {
-        // // var increaseArr = []
         this.increaseConfigData[index] = []
         let _this = this
         if (element.status) {
@@ -509,7 +490,6 @@ export default {
               console.log(i)
               _this.increaseConfigData[index].push(i)
             }
-            // console.log(this.paramsconfigData[i].increase)
           })
         }
       })
