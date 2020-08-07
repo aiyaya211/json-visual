@@ -205,7 +205,10 @@
                     <el-input v-model="paramsconfigForm.flex" size="small"  autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="prefix" label-width="100px">
-                    <el-input v-model="paramsconfigForm.prefix" size="small"  autocomplete="off"></el-input>
+                    <el-select v-model="paramsconfigForm.prefix" size="small">
+                        <el-option label="true" :value="true"></el-option>
+                        <el-option label="false" :value="false"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="tailvalue" label-width="100px">
                     <el-input v-model="paramsconfigForm.tailvalue" size="small"  autocomplete="off"></el-input>
@@ -441,7 +444,7 @@ export default {
             } else if (key === 'flex' || key === 'increase') {
               this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, parseInt(this.paramsconfigForm[key]))
             } else if (key === 'prefix') {
-              this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, !!parseInt(this.paramsconfigForm[key]))
+              this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, !!this.paramsconfigForm[key])
             } else {
               this.$set(this.jsonData.paramsConfig[this.paramsIndex], key, this.paramsconfigForm[key])
             }
