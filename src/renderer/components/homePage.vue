@@ -272,7 +272,7 @@ export default {
       jsonData: {},
       paramsconfigData: [],
       channelsConfigData: {},
-      increaseConfigData: {},
+      increaseConfigData: [],
       scannerConfigData: {},
       backendConfigData: {},
       webConfigData: [],
@@ -303,7 +303,7 @@ export default {
   },
   methods: {
     onJsonChange (value) {
-      console.log('value:', value)
+      // console.log('value:', value)
     },
 
     importJson () {
@@ -323,7 +323,7 @@ export default {
       this.jsonData = {}
       this.paramsconfigData = []
       this.channelsConfigData = {}
-      this.increaseConfigData = {}
+      this.increaseConfigData = []
       this.scannerConfigData = {}
       this.backendConfigData = {}
       this.webConfigData = []
@@ -332,8 +332,8 @@ export default {
       this.$refs.upload.submit()
     },
     handleRemove (file, fileList) {
-      console.log('handleRemove')
-      console.log(file, fileList)
+      // console.log('handleRemove')
+      // console.log(file, fileList)
       this.initData()
     },
     handlePreview (file) {
@@ -341,8 +341,8 @@ export default {
       console.log(file.path)
     },
     handleChange (file, fileList) {
-      console.log('handleChange')
-      console.log(file.raw.path)
+      // console.log('handleChange')
+      // console.log(file.raw.path)
       if (fileList.length > 0) {
         this.fileList = [fileList[fileList.length - 1]]
       }
@@ -363,8 +363,8 @@ export default {
       }
     },
     handleClick () {
-      console.log(this.jsonData)
-      console.log('this.jsonData')
+      // console.log(this.jsonData)
+      // console.log('this.jsonData')
       if (this.jsonData) {
         this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
         this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
@@ -397,7 +397,7 @@ export default {
       this.dialogFormVisible = true
     },
     deleteParams (scope) {
-      console.log(scope.row)
+      // console.log(scope.row)
       this.$confirm('确定要删除该条配置信息?', '提示', {
         confirmButtonText: '确定 ',
         cancelButtonText: '取消',
@@ -419,9 +419,9 @@ export default {
     deleteWebconfig (row) {
       let index = this.webConfigData.indexOf(row)
       this.webConfigData.splice(index, 1)
-      console.log('row')
-      console.log(row)
-      console.log(this.webConfigData)
+      // console.log('row')
+      // console.log(row)
+      // console.log(this.webConfigData)
     },
     addWebconfig () {
       this.webConfigData.push({
@@ -466,8 +466,8 @@ export default {
       }
       if (!this.isEdit) {
         try {
-          console.log(this.paramsconfigForm)
-          console.log('paramsconfigForm')
+          // console.log(this.paramsconfigForm)
+          // console.log('paramsconfigForm')
           let paramsconfigAddData = JSON.parse(JSON.stringify(this.paramsconfigForm))
           let optionsArr = paramsconfigAddData.options ? paramsconfigAddData.options.split(',') : []
           this.$set(paramsconfigAddData, 'options', optionsArr)
@@ -487,6 +487,34 @@ export default {
           console.log('err')
         }
       }
+      // this.paramsconfigData.forEach(item => {
+      //   console.log('paramsconfigData')
+      //   console.log(item)
+      // })
+      this.webConfigData.forEach((element, index) => {
+        // console.log(element.value)
+        // console.log('element')
+        // if (element.status) {
+        // // var increaseArr = []
+        this.increaseConfigData[index] = []
+        let _this = this
+        if (element.status) {
+          element.value.forEach(i => {
+            console.log(_this.paramsconfigData[i].increase)
+            console.log(i)
+            if (_this.paramsconfigData[i].increase === 1 || _this.paramsconfigData[i].increase === '1') {
+              console.log(i)
+              _this.increaseConfigData[index].push(i)
+            }
+            // console.log(this.paramsconfigData[i].increase)
+          })
+        }
+      })
+      for (let key in this.increaseConfigData) {
+        this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
+      }
+      console.log(this.increaseConfigData)
+      console.log('this.webConfigData')
     },
     submitChannelConfig () {
       try {
