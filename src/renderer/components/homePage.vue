@@ -289,7 +289,8 @@ export default {
       paramsIndex: 0,
       paramsOption: '',
       isEdit: true,
-      path: ''
+      path: '',
+      valueArr: []
     }
   },
   components: {
@@ -400,14 +401,52 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let index = this.paramsconfigData.indexOf(scope.row)
-        this.paramsconfigData.splice(index, 1)
-        this.jsonData.paramsConfig.splice(index, 1)
+        let arrIndex = this.paramsconfigData.indexOf(scope.row)
+        this.paramsconfigData.splice(arrIndex, 1)
+        this.jsonData.paramsConfig.splice(arrIndex, 1)
+        this.webConfigData = this.webConfigData.map((i, key) => {
+          const status = i.status
+          const index = i.index
+          // const status = i.status
+          // const index = i.index ? i.index : null
+          this.valueArr[key] = []
+          i.value.map(item => {
+            console.log(item)
+            console.log('item')
+            if (item < arrIndex) {
+              this.valueArr[key].push(item)
+            }
+            if (item > arrIndex) {
+              this.valueArr[key].push(item - 1)
+            }
+            if (item === arrIndex) {
+              let _index = i.value.indexOf(item)
+              this.valueArr[key].splice(_index, 1)
+            }
+          })
+          if (index) {
+            console.log(111)
+            return {
+              status: status,
+              index: index,
+              value: this.valueArr[key]
+            }
+          } else {
+            console.log(222)
+            return {
+              status: status,
+              value: this.valueArr[key]
+            }
+          }
+        })
+        console.log(this.webConfigData)
+        this.jsonData.webConfig = JSON.parse(JSON.stringify(this.webConfigData))
         this.$message({
           type: 'success',
           message: '删除成功!'
         })
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         this.$message({
           type: 'info',
           message: '已取消删除'
