@@ -220,7 +220,11 @@
                     <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="increase" label-width="100px">
-                    <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input>
+                  <el-select v-model="paramsconfigForm.increase" size="small">
+                      <el-option label="0" :value="0"></el-option>
+                      <el-option label="1" :value="1"></el-option>
+                  </el-select>
+                    <!-- <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input> -->
                 </el-form-item>
                 <el-form-item label="validate" label-width="100px">
                     <el-select v-model="paramsconfigForm.validate" size="small">
