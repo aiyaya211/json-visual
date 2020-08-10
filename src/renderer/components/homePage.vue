@@ -371,13 +371,13 @@ export default {
       }
     },
     handleClick () {
-      if (JSON.stringify(this.jsonData) !== '{}') {
-        this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
-        this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
-        this.scannerConfigData = JSON.parse(JSON.stringify(this.jsonData.scannerConfig))
-        this.backendConfigData = JSON.parse(JSON.stringify(this.jsonData.backendConfig))
-        this.webConfigData = JSON.parse(JSON.stringify(this.jsonData.webConfig))
-      }
+      // if (JSON.stringify(this.jsonData) !== '{}') {
+      //   this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
+      //   this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
+      //   this.scannerConfigData = JSON.parse(JSON.stringify(this.jsonData.scannerConfig))
+      //   this.backendConfigData = JSON.parse(JSON.stringify(this.jsonData.backendConfig))
+      //   this.webConfigData = JSON.parse(JSON.stringify(this.jsonData.webConfig))
+      // }
     },
     addParamsConfig () {
       this.isEdit = false
@@ -628,7 +628,11 @@ export default {
     submitChannelConfig () {
       try {
         for (let key in this.channelsConfigData) {
-          this.$set(this.jsonData.channelsConfig, key, this.channelsConfigData[key])
+          if (this.jsonData.channelsConfig) {
+            this.$set(this.jsonData.channelsConfig, key, this.channelsConfigData[key])
+          } else {
+            this.$set(this.jsonData, 'channelsConfig', this.channelsConfigData)
+          }
         }
         setTimeout(() => {
           this.$message({
@@ -692,21 +696,13 @@ export default {
           })
         }, 500)
         this.webConfigData.forEach((element, index) => {
-        // console.log(element.value)
-        // console.log('element')
-        // if (element.status) {
-        // // var increaseArr = []
           this.increaseConfigData[index] = []
           let _this = this
           if (element.status) {
             element.value.forEach(i => {
-              console.log(_this.paramsconfigData[i].increase)
-              console.log(i)
               if (_this.paramsconfigData[i].increase === 1 || _this.paramsconfigData[i].increase === '1') {
-                console.log(i)
                 _this.increaseConfigData[index].push(i)
               }
-            // console.log(this.paramsconfigData[i].increase)
             })
           }
         })
