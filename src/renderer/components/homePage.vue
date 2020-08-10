@@ -710,7 +710,11 @@ export default {
           }
         })
         for (let key in this.increaseConfigData) {
-          this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
+          if (this.jsonData.increase) {
+            this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
+          } else {
+            this.$set(this.jsonData, 'increase', this.increaseConfigData)
+          }
         }
       } catch (err) {
         console.log(err)
