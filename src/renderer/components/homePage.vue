@@ -290,7 +290,9 @@ export default {
       paramsOption: '',
       isEdit: true,
       path: '',
-      valueArr: []
+      valueArr: [],
+      scannerQrArr: [],
+      backendQrArr: []
     }
   },
   components: {
@@ -404,6 +406,7 @@ export default {
         let arrIndex = this.paramsconfigData.indexOf(scope.row)
         this.paramsconfigData.splice(arrIndex, 1)
         this.jsonData.paramsConfig.splice(arrIndex, 1)
+        // 20200810 若做了参数删除 则需要更新所有获取到paramsindex的地方
         this.webConfigData = this.webConfigData.map((i, key) => {
           const status = i.status
           const index = i.index
@@ -439,7 +442,30 @@ export default {
             }
           }
         })
-        console.log(this.webConfigData)
+        this.scannerConfigData.qrcode.map((i, index) => {
+          if (i < arrIndex) {
+            this.scannerQrArr.push(i)
+          }
+          if (i > arrIndex) {
+            this.scannerQrArr.push(i - 1)
+          }
+          if (i === arrIndex) {
+            this.scannerQrArr.splice(i, 1)
+          }
+        })
+        this.backendConfigData.qrcode.map((i, index) => {
+          if (i < arrIndex) {
+            this.backendQrArr.push(i)
+          }
+          if (i > arrIndex) {
+            this.backendQrArr.push(i - 1)
+          }
+          if (i === arrIndex) {
+            this.backendQrArr.splice(i, 1)
+          }
+        })
+        this.$set(this.jsonData.scannerConfig, 'qrcode', this.scannerQrArr)
+        this.$set(this.jsonData.backendConfig, 'qrcode', this.backendQrArr)
         this.jsonData.webConfig = JSON.parse(JSON.stringify(this.webConfigData))
         this.$message({
           type: 'success',
