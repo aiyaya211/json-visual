@@ -276,7 +276,7 @@ export default {
       paramsconfigData: [],
       channelsConfigData: {},
       increaseConfigData: [],
-      scannerConfigData: {},
+      backendConfigscannerConfigData: {},
       backendConfigData: {},
       webConfigData: [],
       fileList: [],
@@ -399,6 +399,10 @@ export default {
       this.dialogFormVisible = true
     },
     deleteParams (scope) {
+      this.valueArr = []
+      this.scannerQrArr = []
+      this.backendQrArr = []
+      this.increaseArr = []
       // console.log(scope.row)
       this.$confirm('确定要删除该条配置信息?', '提示', {
         confirmButtonText: '确定 ',
@@ -406,6 +410,8 @@ export default {
         type: 'warning'
       }).then(() => {
         let arrIndex = this.paramsconfigData.indexOf(scope.row)
+        console.log(arrIndex)
+        console.log('arrIndex')
         this.paramsconfigData.splice(arrIndex, 1)
         this.jsonData.paramsConfig.splice(arrIndex, 1)
         // 20200810 若做了参数删除 则需要更新所有获取到paramsindex的地方
@@ -469,6 +475,8 @@ export default {
           })
         })
         this.scannerConfigData.qrcode.map((i, index) => {
+          console.log('scannerConfigData')
+          console.log(this.scannerConfigData)
           if (i < arrIndex) {
             this.scannerQrArr.push(i)
           }
@@ -497,12 +505,17 @@ export default {
         this.$set(this.jsonData.backendConfig, 'qrcode', this.backendQrArr)
         this.jsonData.webConfig = JSON.parse(JSON.stringify(this.webConfigData))
         this.jsonData.increase = JSON.parse(JSON.stringify(this.increaseArr))
+        this.$set(this.scannerConfigData, 'qrcode', this.scannerQrArr)
+        this.$set(this.backendConfigData, 'qrcode', this.backendQrArr)
+        this.webConfigData = JSON.parse(JSON.stringify(this.webConfigData))
+        this.increaseConfigData = JSON.parse(JSON.stringify(this.increaseArr))
         this.$message({
           type: 'success',
           message: '删除成功!'
         })
       }).catch((err) => {
         console.log(err)
+        console.log('error')
         this.$message({
           type: 'info',
           message: '已取消删除'
