@@ -280,7 +280,7 @@ export default {
       paramsconfigData: [],
       channelsConfigData: {},
       increaseConfigData: [],
-      backendConfigscannerConfigData: {},
+      scannerConfigData: {},
       backendConfigData: {},
       webConfigData: [],
       fileList: [],
@@ -646,7 +646,11 @@ export default {
     submitScannerConfig () {
       try {
         for (let key in this.scannerConfigData) {
-          this.$set(this.jsonData.scannerConfig, key, this.scannerConfigData[key])
+          if (this.jsonData.scannerConfig) {
+            this.$set(this.jsonData.scannerConfig, key, this.scannerConfigData[key])
+          } else {
+            this.$set(this.jsonData, 'scannerConfig', this.scannerConfigData)
+          }
         }
         setTimeout(() => {
           this.$message({
@@ -665,7 +669,11 @@ export default {
     submitBackendConfig () {
       try {
         for (let key in this.backendConfigData) {
-          this.$set(this.jsonData.backendConfig, key, this.backendConfigData[key])
+          if (this.jsonData.backendConfig) {
+            this.$set(this.jsonData.backendConfig, key, this.backendConfigData[key])
+          } else {
+            this.$set(this.jsonData, 'backendConfig', this.backendConfigData)
+          }
         }
         setTimeout(() => {
           this.$message({
