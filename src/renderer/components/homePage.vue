@@ -292,7 +292,8 @@ export default {
       path: '',
       valueArr: [],
       scannerQrArr: [],
-      backendQrArr: []
+      backendQrArr: [],
+      increaseArr: []
     }
   },
   components: {
@@ -359,6 +360,7 @@ export default {
         this.scannerConfigData = JSON.parse(JSON.stringify(_z.scannerConfig))
         this.backendConfigData = JSON.parse(JSON.stringify(_z.backendConfig))
         this.webConfigData = JSON.parse(JSON.stringify(_z.webConfig))
+        this.increaseConfigData = JSON.parse(JSON.stringify(_z.increase))
       } catch (error) {
         this.$message.error('json格式有误，请检查')
         console.log(error)
@@ -442,6 +444,30 @@ export default {
             }
           }
         })
+        console.log(this.increaseConfigData)
+        this.increaseConfigData.map((i, index) => {
+          console.log('increaseConfigData')
+          console.log(i)
+          console.log('i')
+          this.increaseArr[index] = []
+          i.map(item => {
+            console.log(item)
+            console.log('item')
+            if (item < arrIndex) {
+              console.log(999)
+              this.increaseArr[index].push(item)
+            }
+            if (item > arrIndex) {
+              console.log(8888)
+              this.increaseArr[index].push(item - 1)
+            }
+            if (item === arrIndex) {
+              console.log(6666)
+              let _index = i.indexOf(item)
+              this.increaseArr[index].splice(_index, 1)
+            }
+          })
+        })
         this.scannerConfigData.qrcode.map((i, index) => {
           if (i < arrIndex) {
             this.scannerQrArr.push(i)
@@ -450,7 +476,8 @@ export default {
             this.scannerQrArr.push(i - 1)
           }
           if (i === arrIndex) {
-            this.scannerQrArr.splice(i, 1)
+            let _index = this.scannerConfigData.qrcode.indexOf(i)
+            this.scannerQrArr.splice(_index, 1)
           }
         })
         this.backendConfigData.qrcode.map((i, index) => {
@@ -461,12 +488,15 @@ export default {
             this.backendQrArr.push(i - 1)
           }
           if (i === arrIndex) {
-            this.backendQrArr.splice(i, 1)
+            let _index = this.backendConfigData.qrcode.indexOf(i)
+            this.backendQrArr.splice(_index, 1)
           }
         })
+        // this.$set(this.jsonData.increase, this.increaseArr)
         this.$set(this.jsonData.scannerConfig, 'qrcode', this.scannerQrArr)
         this.$set(this.jsonData.backendConfig, 'qrcode', this.backendQrArr)
         this.jsonData.webConfig = JSON.parse(JSON.stringify(this.webConfigData))
+        this.jsonData.increase = JSON.parse(JSON.stringify(this.increaseArr))
         this.$message({
           type: 'success',
           message: '删除成功!'
