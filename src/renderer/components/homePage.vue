@@ -733,9 +733,12 @@ export default {
       }
     },
     exportJson () {
+      console.log(this.path)
+      console.log('path')
       console.log('exportJson')
+      // if (this.path) {
       let data = JSON.stringify(this.jsonData, null, 4)
-      fs.writeFileSync(this.path, data, (err) => {
+      fs.writeFileSync('./config/config.json', data, (err) => {
         if (err) {
           console.log('err')
           console.log(err)

@@ -21,6 +21,9 @@
     "unit": "karma start test/unit/karma.conf.js",
     "postinstall": "npm run lint:fix"
   },
+  "extraFiles": [
+    "config"
+  ],
   "build": {
     "productName": "json-visual",
     "appId": "com.example.yourapp",
