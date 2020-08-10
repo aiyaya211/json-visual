@@ -367,7 +367,7 @@ export default {
       }
     },
     handleClick () {
-      if (this.jsonData) {
+      if (JSON.stringify(this.jsonData) !== '{}') {
         this.paramsconfigData = JSON.parse(JSON.stringify(this.jsonData.paramsConfig))
         this.channelsConfigData = JSON.parse(JSON.stringify(this.jsonData.channelsConfig))
         this.scannerConfigData = JSON.parse(JSON.stringify(this.jsonData.scannerConfig))
