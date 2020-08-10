@@ -574,9 +574,17 @@ export default {
       if (!this.isEdit) {
         try {
           let paramsconfigAddData = JSON.parse(JSON.stringify(this.paramsconfigForm))
+          console.log(paramsconfigAddData)
+          console.log('paramsconfigAddData')
           let optionsArr = paramsconfigAddData.options ? paramsconfigAddData.options.split(',') : []
           this.$set(paramsconfigAddData, 'options', optionsArr)
-          this.jsonData.paramsConfig.push(paramsconfigAddData)
+          if (this.jsonData.paramsConfig) {
+            this.jsonData.paramsConfig.push(paramsconfigAddData)
+          } else {
+            let arr = []
+            arr.push(paramsconfigAddData)
+            this.$set(this.jsonData, 'paramsConfig', arr)
+          }
           this.paramsconfigData.push(paramsconfigAddData)
           this.dialogFormVisible = false
           this.$nextTick(() => {
