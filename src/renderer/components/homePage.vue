@@ -578,6 +578,12 @@ export default {
           this.$nextTick(() => {
             this.$refs.tableDataRef.doLayout()
           })
+          setTimeout(() => {
+            this.$message({
+              message: '新增params参数成功',
+              type: 'success'
+            })
+          }, 500)
         } catch (err) {
           this.$message({
             message: '新增params参数失败',
