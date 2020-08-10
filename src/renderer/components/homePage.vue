@@ -461,18 +461,13 @@ export default {
           console.log('i')
           this.increaseArr[index] = []
           i.map(item => {
-            console.log(item)
-            console.log('item')
             if (item < arrIndex) {
-              console.log(999)
               this.increaseArr[index].push(item)
             }
             if (item > arrIndex) {
-              console.log(8888)
               this.increaseArr[index].push(item - 1)
             }
             if (item === arrIndex) {
-              console.log(6666)
               let _index = i.indexOf(item)
               this.increaseArr[index].splice(_index, 1)
             }
