@@ -21,10 +21,6 @@
     "unit": "karma start test/unit/karma.conf.js",
     "postinstall": "npm run lint:fix"
   },
-  "extraResources":  {  
-    "from": "./config/",
-    "to": "config"
-  },
   "build": {
     "productName": "json-visual",
     "appId": "com.example.yourapp",
@@ -34,6 +30,10 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "extraResources":  {  
+      "from": "./config/",
+      "to": "./config"
+    },
     "dmg": {
       "contents": [
         {
