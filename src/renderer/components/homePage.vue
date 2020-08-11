@@ -250,7 +250,7 @@
                    v-model="paramsOption"
                    v-if="jsonData.paramsConfig[value].options.length>0"  
                    :placeholder="jsonData.paramsConfig[value].name" 
-                   style="width: 200px;margin-bottom: 10px;">
+                   style="width: 160px;margin-bottom: 10px;">
                   <el-option
                     v-for="(item,key) in jsonData.paramsConfig[value].options"
                     :key="key"
@@ -258,12 +258,22 @@
                     :value="item">
                   </el-option>
                 </el-select>
-                <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix" style="width: 200px;margin-bottom: 10px;"></el-input>
-                <div v-if="jsonData.increase && jsonData.increase.length < 2 " style="display: flex;align-items:center;">
-                  <el-input v-show="item.status"  maxlength="3" size="mini" style="width: 100px;margin-left: 10px;"/>  
-                  <el-checkbox v-show="item.status" style="margin-left: 10px;">自增</el-checkbox>
-                </div>
+                <el-input 
+                v-else 
+                :placeholder="jsonData.paramsConfig[value].name" 
+                :disabled="jsonData.paramsConfig[value].prefix" 
+                style="width: 160px;margin-bottom: 10px;">
+                </el-input>
               </div>
+              <div v-if="item.status" style="display: flex;align-items:center;">
+                <!--对自增前面的输入框单独进行验证 setFormIncreaseValue-->
+                <el-input v-show="item.status" maxlength="3" style="width: 50px;margin-left: 5px;" size="small"></el-input>
+                <el-checkbox v-show="item.status" style="margin-left: 5px;">自增</el-checkbox>
+              </div>
+              <!-- <div v-if="jsonData.increase && jsonData.increase.length < 2 " style="display: flex;align-items:center;">
+                <el-input v-show="item.status"  maxlength="3" size="mini" style="width: 80px;margin-left: 10px;"/>  
+                <el-checkbox v-show="item.status" style="margin-left: 10px;">自增</el-checkbox>
+              </div> -->
             </div>
           </div>  
         </el-dialog>
@@ -473,6 +483,9 @@ export default {
             }
           })
         })
+        this.increaseArr = this.deleteEmpty(this.increaseArr)
+        console.log('this.increaseArr')
+        console.log(this.increaseArr)
         this.scannerConfigData.qrcode.map((i, index) => {
           console.log('scannerConfigData')
           console.log(this.scannerConfigData)
@@ -710,6 +723,7 @@ export default {
           }
         })
         for (let key in this.increaseConfigData) {
+          this.increaseConfigData = this.deleteEmpty(this.increaseConfigData)
           if (this.jsonData.increase) {
             this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
           } else {
@@ -746,6 +760,21 @@ export default {
           console.log('导出成功')
         }
       })
+    },
+    deleteEmpty (arr) {
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = 0; j < arr[i].length; j++) {
+          if (arr[i][j].length === 0) {
+            arr[i].splice(j, 1)
+            j = j - 1
+          }
+        }
+        if (arr[i].length === 0) {
+          arr.splice(i, 1)
+          i = i - 1
+        }
+      }
+      return arr
     }
   }
 }
