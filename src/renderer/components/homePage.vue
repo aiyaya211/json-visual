@@ -244,7 +244,7 @@
         <!-- 界面预览 -->
         <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form">
           <div  v-if="jsonData">
-            <div v-for="(item, index) in jsonData.webConfig" :key="index">
+            <div v-for="(item, index) in jsonData.webConfig" :key="index" style="display: flex;">
               <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" style="display: flex;align-items:center;">
                 <el-select 
                    v-model="paramsOption"
@@ -259,7 +259,7 @@
                   </el-option>
                 </el-select>
                 <el-input v-else class="params-input" :placeholder="jsonData.paramsConfig[value].name" :disabled="jsonData.paramsConfig[value].prefix" style="width: 200px;margin-bottom: 10px;"></el-input>
-                <div v-if="jsonData.increase" style="display: flex;align-items:center;">
+                <div v-if="jsonData.increase && jsonData.increase.length < 2 " style="display: flex;align-items:center;">
                   <el-input v-show="item.status"  maxlength="3" size="mini" style="width: 100px;margin-left: 10px;"/>  
                   <el-checkbox v-show="item.status" style="margin-left: 10px;">自增</el-checkbox>
                 </div>
