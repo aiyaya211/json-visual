@@ -1,12 +1,54 @@
 {
     "paramsConfig": [
         {
-            "key": "name",
-            "name": "名称",
-            "flex": "1",
-            "prefix": true,
-            "tailvalue": "1",
-            "options": []
+            "key": "PathoNum",
+            "name": "病理号",
+            "flex": 1,
+            "increase": 1,
+            "options": [],
+            "validate": "Any-Number"
+        },
+        {
+            "key": "WaxNum",
+            "name": "蜡块号",
+            "flex": 1,
+            "prefix": false,
+            "options": [],
+            "increase": 0
         }
-    ]
+    ],
+    "channelsConfig": {
+        "status": false,
+        "channelNumber": 6
+    },
+    "webConfig": [
+        {
+            "value": [
+                0,
+                1
+            ],
+            "status": true
+        }
+    ],
+    "increase": [
+        [
+            0
+        ]
+    ],
+    "scannerConfig": {
+        "connector": "-",
+        "qrcode": [
+            0,
+            1
+        ]
+    },
+    "backendConfig": {
+        "qrpadding": "-00.01_K010101001-PAP",
+        "qrcode": [
+            0,
+            1
+        ],
+        "connector": "",
+        "note": "广东金域病理"
+    }
 }
