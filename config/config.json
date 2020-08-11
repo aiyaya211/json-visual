@@ -1,6 +1,12 @@
 {
-    "channelsConfig": {
-        "channelNumber": 3,
-        "status": true
-    }
+    "paramsConfig": [
+        {
+            "key": "name",
+            "name": "名称",
+            "flex": "1",
+            "prefix": true,
+            "tailvalue": "1",
+            "options": []
+        }
+    ]
 }
