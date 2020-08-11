@@ -265,7 +265,7 @@
                 style="width: 160px;margin-bottom: 10px;">
                 </el-input>
               </div>
-              <div v-if="item.status" style="display: flex;align-items:center;">
+              <div v-if="item.value.join('').includes(jsonData.increase.join(''), 0)  && jsonData.increase.length > 0 && item.status" style="display: flex;align-items:center;">
                 <!--对自增前面的输入框单独进行验证 setFormIncreaseValue-->
                 <el-input v-show="item.status" maxlength="3" style="width: 50px;margin-left: 5px;" size="small"></el-input>
                 <el-checkbox v-show="item.status" style="margin-left: 5px;">自增</el-checkbox>
