@@ -285,7 +285,7 @@
 <script>
 import JsonViewer from 'vue-json-viewer'
 const fs = require('fs')
-const dialog = require('electron').dialog
+const { dialog } = require('electron')
 
 export default {
   data () {
@@ -781,15 +781,15 @@ export default {
       return arr
     },
     saveFile () {
-      dialog.showSaveDialog({
-        title: '保存文件'
-      }).then(res => {
-        console.log('res')
-        console.log(res)
-      }).catch(err => {
-        console.error(err)
-      })
-
+      console.log(dialog)
+      // dialog.showSaveDialog({
+      //   title: '保存文件'
+      // }).then(res => {
+      //   console.log('res')
+      //   console.log(res)
+      // }).catch(err => {
+      //   console.error(err)
+      // })
     }
   }
 }
