@@ -15,7 +15,7 @@
                 :limit="1">
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
                 <el-button size="small" style="margin-left: 10px" @click="exportJson">保存</el-button>
-                 <el-button size="small" style="margin-left: 10px" @click="saveFile">另保存</el-button>
+                 <el-button size="small" style="margin-left: 10px" @click="saveFile">另存为</el-button>
             </el-upload>
           </div>
             <div>
