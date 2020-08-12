@@ -759,14 +759,29 @@ export default {
       console.log('exportJson')
       if (this.path) {
         let data = JSON.stringify(this.jsonData, null, 4)
-        fs.writeFileSync(this.path, data, (err) => {
-          if (err) {
-            console.log('err')
-            console.log(err)
-          } else {
-            console.log('导出成功')
-          }
-        })
+        try {
+          fs.writeFileSync(this.path, data, (err) => {
+            if (err) {
+              console.error(err)
+              // this.$message({
+              //   message: '保存失败',
+              //   type: 'success'
+              // })
+            }
+          })
+          setTimeout(() => {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          }, 500)
+        } catch (err) {
+          console.error(err)
+          this.$message({
+            message: '保存失败',
+            type: 'success'
+          })
+        }
       } else {
         this.$message({
           message: '暂无可保存的文件',
