@@ -267,7 +267,7 @@
                 :disabled="jsonData.paramsConfig[value].prefix" >
                 </el-input>
               </div>
-              <div v-if="item.value.join('').includes(jsonData.increase.join(''), 0)  && jsonData.increase.length > 0 && item.status" style="display: flex;align-items:center;" class="increase-box">
+              <div v-if="judge(jsonData.increase, item.value) && jsonData.increase.length > 0 && item.status" style="display: flex;align-items:center;" class="increase-box">
                 <!--对自增前面的输入框单独进行验证 setFormIncreaseValue-->
                 <el-input v-show="item.status" maxlength="3" style="width: 50px;margin-left: 5px;" size="small"></el-input>
                 <el-checkbox v-show="item.status" style="margin-left: 5px;">自增</el-checkbox>
@@ -634,6 +634,7 @@ export default {
           })
         }
       })
+      this.increaseConfigData = this.deleteEmpty(this.increaseConfigData)
       for (let key in this.increaseConfigData) {
         this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
       }
@@ -803,6 +804,16 @@ export default {
         }
       }
       return arr
+    },
+    judge (arr1, arr2) {
+      console.log('judge')
+      console.log(arr1)
+      console.log(arr2)
+      let arr = [].concat(...arr1)
+      let flag = arr2.some(item => {
+        return arr.indexOf(item) !== -1
+      })
+      return flag
     },
     saveFile () {
       // const { dialog } = require('electron')
