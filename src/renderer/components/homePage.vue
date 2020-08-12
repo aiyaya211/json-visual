@@ -248,13 +248,12 @@
         <!-- 界面预览 -->
         <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form">
           <div  v-if="jsonData">
-            <div v-for="(item, index) in jsonData.webConfig" :key="index" style="display: flex;">
-              <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" style="display: flex;align-items:center;">
+            <div v-for="(item, index) in jsonData.webConfig" :key="index" class="leftIem">
+              <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" class="row-box">
                 <el-select 
                    v-model="paramsOption"
                    v-if="jsonData.paramsConfig[value].options.length>0"  
-                   :placeholder="jsonData.paramsConfig[value].name" 
-                   style="width: 160px;margin-bottom: 10px;">
+                   :placeholder="jsonData.paramsConfig[value].name" >
                   <el-option
                     v-for="(item,key) in jsonData.paramsConfig[value].options"
                     :key="key"
@@ -265,11 +264,10 @@
                 <el-input 
                 v-else 
                 :placeholder="jsonData.paramsConfig[value].name" 
-                :disabled="jsonData.paramsConfig[value].prefix" 
-                style="width: 160px;margin-bottom: 10px;">
+                :disabled="jsonData.paramsConfig[value].prefix" >
                 </el-input>
               </div>
-              <div v-if="item.value.join('').includes(jsonData.increase.join(''), 0)  && jsonData.increase.length > 0 && item.status" style="display: flex;align-items:center;">
+              <div v-if="item.value.join('').includes(jsonData.increase.join(''), 0)  && jsonData.increase.length > 0 && item.status" style="display: flex;align-items:center;" class="increase-box">
                 <!--对自增前面的输入框单独进行验证 setFormIncreaseValue-->
                 <el-input v-show="item.status" maxlength="3" style="width: 50px;margin-left: 5px;" size="small"></el-input>
                 <el-checkbox v-show="item.status" style="margin-left: 5px;">自增</el-checkbox>
@@ -770,10 +768,10 @@ export default {
           }
         })
       } else {
-         this.$message({
-            message: '暂无可保存的文件',
-            type: 'error'
-          })
+        this.$message({
+          message: '暂无可保存的文件',
+          type: 'error'
+        })
       }
     },
     deleteEmpty (arr) {
@@ -831,6 +829,37 @@ export default {
     border: 1px solid #eee;
     border-radius: 6px;
 }
+ .leftIem{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      margin-bottom:10px;
+      margin-top: 15px;
+      .increase-box{
+        width: 115px;
+        display: flex;
+        align-items:center;
+        .el-input{
+          margin-right: 5px;
+        }
+      }
+      &:first-child{
+        margin-top:0;
+      }
+      .row-box{
+        margin-right: 5px;
+        .el-select{
+          width: 100%;
+          .el-input__icon{
+            line-height: 32px;
+          }
+        }
+      }
+      span{
+        font-size:14px;
+        font-family:PingFangSC-Regular;
+      }
+  }
 .el-tree-node__content {
     margin-top: 10px;
     margin-bottom:  10px;
