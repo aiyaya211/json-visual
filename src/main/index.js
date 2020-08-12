@@ -15,6 +15,9 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+const {dialog} = require('electron')
+console.log(dialog)
+
 function createWindow () {
   /**
    * Initial window options

@@ -14,11 +14,12 @@
                 :auto-upload="false"
                 :limit="1">
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
+                <el-button size="small" style="margin-left: 10px" @click="exportJson">保存</el-button>
+                 <el-button size="small" style="margin-left: 10px" @click="saveFile">另保存</el-button>
             </el-upload>
-            <el-button size="small" style="margin-left: 10px" @click="saveFile">保存</el-button>
           </div>
             <div>
-              <el-button size="small" type="primary" @click="exportJson">导出文件</el-button>
+              <!-- <el-button size="small" type="primary" @click="exportJson">导出文件</el-button> -->
               <el-button size="small" type="primary" @click="preview">界面预览</el-button>
               <el-button size="small" type="primary" v-if="activeName === 'paramsConfig'" @click="addParamsConfig">新增params配置</el-button>
             </div>
@@ -285,7 +286,10 @@
 <script>
 import JsonViewer from 'vue-json-viewer'
 const fs = require('fs')
-const { dialog } = require('electron')
+let electron = require('electron')
+
+// const { ipcRender } = electron
+const {dialog} = electron.remote
 
 export default {
   data () {
@@ -357,6 +361,7 @@ export default {
       this.$refs.upload.submit()
     },
     handleRemove (file, fileList) {
+      this.path = ''
       this.initData()
     },
     handlePreview (file) {
@@ -754,16 +759,22 @@ export default {
       console.log(this.path)
       console.log('path')
       console.log('exportJson')
-      // if (this.path) {
-      let data = JSON.stringify(this.jsonData, null, 4)
-      fs.writeFileSync('./config/config.json', data, (err) => {
-        if (err) {
-          console.log('err')
-          console.log(err)
-        } else {
-          console.log('导出成功')
-        }
-      })
+      if (this.path) {
+        let data = JSON.stringify(this.jsonData, null, 4)
+        fs.writeFileSync(this.path, data, (err) => {
+          if (err) {
+            console.log('err')
+            console.log(err)
+          } else {
+            console.log('导出成功')
+          }
+        })
+      } else {
+         this.$message({
+            message: '暂无可保存的文件',
+            type: 'error'
+          })
+      }
     },
     deleteEmpty (arr) {
       for (var i = 0; i < arr.length; i++) {
@@ -781,15 +792,25 @@ export default {
       return arr
     },
     saveFile () {
+      // const { dialog } = require('electron')
       console.log(dialog)
-      // dialog.showSaveDialog({
-      //   title: '保存文件'
-      // }).then(res => {
-      //   console.log('res')
-      //   console.log(res)
-      // }).catch(err => {
-      //   console.error(err)
-      // })
+      dialog.showSaveDialog(null, {
+        filters: [{
+          name: 'json',
+          extensions: ['json', 'txt']
+        }],
+        title: '保存文件'
+      }, (filename) => {
+        if (filename) {
+          console.log('filename')
+          console.log(filename)
+          fs.writeFileSync(filename, JSON.stringify(this.jsonData, null, 4), (err) => {
+            if (err) {
+              console.log(err)
+            }
+          })
+        }
+      })
     }
   }
 }
