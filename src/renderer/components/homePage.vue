@@ -555,6 +555,9 @@ export default {
       if (this.isEdit) {
         try {
           this.paramsconfigData[this.paramsIndex] = Object.assign({}, this.paramsconfigForm)
+          if (this.paramsconfigForm.options[this.paramsconfigForm.options.length - 1] === ',') {
+            this.$set(this.paramsconfigForm, 'options', this.paramsconfigForm.options.substr(0, this.paramsconfigForm.options.length - 1))
+          }
           let optionsArr = this.paramsconfigForm.options ? this.paramsconfigForm.options.split(',') : []
           this.$set(this.paramsconfigData[this.paramsIndex], 'options', optionsArr)
           for (let key in this.paramsconfigForm) {
@@ -806,9 +809,6 @@ export default {
       return arr
     },
     judge (arr1, arr2) {
-      console.log('judge')
-      console.log(arr1)
-      console.log(arr2)
       let arr = [].concat(...arr1)
       let flag = arr2.some(item => {
         return arr.indexOf(item) !== -1
