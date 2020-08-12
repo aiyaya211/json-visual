@@ -30,7 +30,7 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "extraResources":  {  
+    "extraResources": {
       "from": "./config/",
       "to": "./config"
     },
@@ -57,21 +57,16 @@
     },
     "linux": {
       "icon": "build/icons"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     }
   },
-  "nsis": {
-    "oneClick": false,
-    "guid": "xxxx",
-    "perMachine": true,
-    "allowElevation": true,
-    "allowToChangeInstallationDirectory": true,
-    "installerIcon": "./build/icons/aaa.ico",
-    "uninstallerIcon": "./build/icons/bbb.ico",
-    "installerHeaderIcon": "./build/icons/aaa.ico",
-    "createDesktopShortcut": true,
-    "createStartMenuShortcut": true,
-    "shortcutName": "xxxx"
-},
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.13.2",

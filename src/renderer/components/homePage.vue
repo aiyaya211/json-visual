@@ -1,6 +1,7 @@
 <template>
     <div class="main-page">
         <div style="margin-bottom: 10px;display:flex;justify-content:space-between;">
+          <div style="display: flex;">
             <el-upload
                 :multiple="false"
                 class="upload-demo"
@@ -14,6 +15,8 @@
                 :limit="1">
                 <el-button slot="trigger" size="small" type="primary">导入文件</el-button>
             </el-upload>
+            <el-button size="small" style="margin-left: 10px" @click="saveFile">保存</el-button>
+          </div>
             <div>
               <el-button size="small" type="primary" @click="exportJson">导出文件</el-button>
               <el-button size="small" type="primary" @click="preview">界面预览</el-button>
@@ -282,6 +285,7 @@
 <script>
 import JsonViewer from 'vue-json-viewer'
 const fs = require('fs')
+const dialog = require('electron').dialog
 
 export default {
   data () {
@@ -775,6 +779,17 @@ export default {
         }
       }
       return arr
+    },
+    saveFile () {
+      dialog.showSaveDialog({
+        title: '保存文件'
+      }).then(res => {
+        console.log('res')
+        console.log(res)
+      }).catch(err => {
+        console.error(err)
+      })
+
     }
   }
 }
