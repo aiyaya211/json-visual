@@ -869,9 +869,20 @@ export default {
     // 显示二维码内容
     printQrcode () {
       this.qrcodeStr = ''
-      this.jsonData.backendConfig.qrcode.forEach(item => {
+      this.jsonData.backendConfig.qrcode.forEach((item, index) => {
         if (this.form[this.paramsconfigData[item].key]) {
-          this.qrcodeStr += this.form[this.paramsconfigData[item].key]
+          if (this.paramsconfigData[item].padding === false) {
+            console.log('false')
+            this.qrcodeStr += (this.paramsconfigData[item].prevalue ? this.paramsconfigData[item].prevalue : '') +
+             this.form[this.paramsconfigData[item].key] +
+             (this.paramsconfigData[item].tailvalue ? this.paramsconfigData[item].tailvalue : '')
+          } else {
+            console.log('true')
+            this.qrcodeStr += (this.paramsconfigData[item].prevalue ? this.paramsconfigData[item].prevalue : '') +
+             this.form[this.paramsconfigData[item].key] +
+             (this.paramsconfigData[item].tailvalue ? this.paramsconfigData[item].tailvalue : '') +
+             (this.jsonData.backendConfig.connector && index !== this.jsonData.backendConfig.qrcode.length - 1 ? this.jsonData.backendConfig.connector : '')
+          }
         };
       })
       this.showqrcode = true
