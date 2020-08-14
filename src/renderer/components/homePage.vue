@@ -251,7 +251,7 @@
             <div v-for="(item, index) in jsonData.webConfig" :key="index" class="leftIem">
               <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" class="row-box">
                 <el-select 
-                   v-model="paramsOption"
+                  v-model="form[jsonData.paramsConfig[value].key]"
                    v-if="jsonData.paramsConfig[value].options.length>0"  
                    :placeholder="jsonData.paramsConfig[value].name" >
                   <el-option
@@ -263,6 +263,7 @@
                 </el-select>
                 <el-input 
                 v-else 
+                 v-model="form[jsonData.paramsConfig[value].key]"
                 :placeholder="jsonData.paramsConfig[value].name" 
                 :disabled="jsonData.paramsConfig[value].prefix" >
                 </el-input>
@@ -276,6 +277,16 @@
                 <el-input v-show="item.status"  maxlength="3" size="mini" style="width: 80px;margin-left: 10px;"/>  
                 <el-checkbox v-show="item.status" style="margin-left: 10px;">自增</el-checkbox>
               </div> -->
+            </div>
+            <div>
+              <el-button size="small" @click="printQrcode">显示二维码内容</el-button>
+              <div style="margin-top: 10px;" v-if="showqrcode">
+                <el-form>
+                  <el-form-item label="二维码信息" label-width="100px">
+                    <span>{{qrcodeStr}}</span>
+                  </el-form-item>
+                </el-form>
+              </div>
             </div>
           </div>  
         </el-dialog>
@@ -313,7 +324,10 @@ export default {
       valueArr: [],
       scannerQrArr: [],
       backendQrArr: [],
-      increaseArr: []
+      increaseArr: [],
+      form: {},
+      qrcodeStr: '',
+      showqrcode: false
     }
   },
   components: {
@@ -344,6 +358,9 @@ export default {
       })
     },
     preview () {
+      this.form = {}
+      this.qrcodeStr = ''
+      this.showqrcode = false
       this.previewVisible = true
     },
     initData () {
@@ -835,6 +852,16 @@ export default {
           })
         }
       })
+    },
+    // 显示二维码内容
+    printQrcode () {
+      this.qrcodeStr = ''
+      this.jsonData.backendConfig.qrcode.forEach(item => {
+        if (this.form[this.paramsconfigData[item].key]) {
+          this.qrcodeStr += this.form[this.paramsconfigData[item].key]
+        };
+      })
+      this.showqrcode = true
     }
   }
 }
