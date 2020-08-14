@@ -88,6 +88,12 @@
                 </el-table-column>
                 <el-table-column
                     show-overflow-tooltip
+                    prop="padding"
+                    label="padding"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    show-overflow-tooltip
                     prop="options"
                     label="options"
                     width="100">
@@ -197,7 +203,7 @@
             </div>
         </div>
         <!-- 修改paramsConfig -->
-        <el-dialog title="paramsConfig配置" :visible.sync="dialogFormVisible" class="dialog-form">
+        <el-dialog title="paramsConfig配置" :visible.sync="dialogFormVisible" class="dialog-form" top="2vh">
             <el-form :model="paramsconfigForm">
                 <el-form-item label="key" label-width="100px">
                     <el-input v-model="paramsconfigForm.key" size="small"  autocomplete="off"></el-input>
@@ -219,6 +225,13 @@
                 </el-form-item>
                 <el-form-item label="prevalue" label-width="100px">
                     <el-input v-model="paramsconfigForm.prevalue" size="small"  autocomplete="off"></el-input>
+                </el-form-item>
+                <!-- 20200814 params新增参数 -->
+                <el-form-item label="padding" label-width="100px">
+                    <el-select v-model="paramsconfigForm.padding" size="small">
+                        <el-option label="true" :value="true"></el-option>
+                        <el-option label="false" :value="false"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="options" label-width="100px">
                     <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off"></el-input>
@@ -935,5 +948,8 @@ export default {
    .el-form-item {
        margin-bottom: 0;
    } 
+  .el-dialog__body {
+      padding: 0 .75rem;
+    }
 }
 </style>
