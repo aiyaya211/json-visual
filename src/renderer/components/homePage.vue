@@ -123,7 +123,7 @@
               <!-- channelsConfig -->
               <el-form ref="form" :model="channelsConfigData" label-width="100px" v-if="activeName == 'channelsConfig'">
                 <el-form-item label="status">
-                    <el-select v-model="channelsConfigData.status" placeholder="多通道">
+                    <el-select v-model="channelsConfigData.status" placeholder="多通道" clearable>
                         <el-option label="true" :value="true"></el-option>
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
@@ -141,7 +141,7 @@
                     <el-input v-model="scannerConfigData.connector" style="width: 100px" placeholder="连接符"></el-input>
                 </el-form-item>
                 <el-form-item label="qrcode">
-                    <el-select v-model="scannerConfigData.qrcode" multiple placeholder="连接项">
+                    <el-select v-model="scannerConfigData.qrcode" multiple placeholder="连接项" clearable>
                       <el-option
                          v-for="(item,index) in paramsconfigData"
                         :key="index"
@@ -164,7 +164,7 @@
                     <el-input v-model="backendConfigData.connector" style="width: 150px" placeholder="连接符"></el-input>
                 </el-form-item>
                 <el-form-item label="qrcode">
-                    <el-select v-model="backendConfigData.qrcode" multiple placeholder="连接项">
+                    <el-select v-model="backendConfigData.qrcode" multiple placeholder="连接项" clearable>
                       <el-option
                          v-for="(item,index) in paramsconfigData"
                         :key="index"
@@ -184,7 +184,7 @@
               <!-- webConfig -->
               <el-form  v-if="activeName == 'webConfig'">
                 <el-form-item v-for="(item,index) in webConfigData" :key="index" style="margin-left:10px;">
-                    <el-select multiple placeholder="请选择" v-model="item.value">
+                    <el-select multiple placeholder="请选择" v-model="item.value" clearable>
                       <el-option
                           v-for="(item,index) in paramsconfigData"
                           :key="index"
@@ -215,7 +215,7 @@
                     <el-input v-model="paramsconfigForm.flex" size="small"  autocomplete="off" placeholder="布局占比"></el-input>
                 </el-form-item>
                 <el-form-item label="prefix" label-width="100px">
-                    <el-select v-model="paramsconfigForm.prefix" size="small" placeholder="prefix">
+                    <el-select v-model="paramsconfigForm.prefix" size="small" placeholder="prefix" clearable>
                         <el-option label="true" :value="true"></el-option>
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
@@ -228,7 +228,7 @@
                 </el-form-item>
                 <!-- 20200814 params新增参数 -->
                 <el-form-item label="padding" label-width="100px">
-                    <el-select v-model="paramsconfigForm.padding" size="small" placeholder="显示连接符">
+                    <el-select v-model="paramsconfigForm.padding" size="small" placeholder="显示连接符" clearable>
                         <el-option label="true" :value="true"></el-option>
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
@@ -244,7 +244,7 @@
                     <!-- <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input> -->
                 </el-form-item>
                 <el-form-item label="validate" label-width="100px">
-                    <el-select v-model="paramsconfigForm.validate" size="small" placeholder="参数类型">
+                    <el-select v-model="paramsconfigForm.validate" size="small" placeholder="参数类型" clearable>
                         <el-option label="Any-Number" value="Any-Number"></el-option>
                         <el-option label="Number" value="Number"></el-option>
                         <el-option label="CN" value="CN"></el-option>
@@ -264,6 +264,7 @@
             <div v-for="(item, index) in jsonData.webConfig" :key="index" class="leftIem">
               <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" class="row-box">
                 <el-select 
+                  clearable
                   v-model="form[jsonData.paramsConfig[value].key]"
                    v-if="jsonData.paramsConfig[value].options.length>0"  
                    :placeholder="jsonData.paramsConfig[value].name" >
