@@ -123,7 +123,7 @@
               <!-- channelsConfig -->
               <el-form ref="form" :model="channelsConfigData" label-width="100px" v-if="activeName == 'channelsConfig'">
                 <el-form-item label="status">
-                    <el-select v-model="channelsConfigData.status">
+                    <el-select v-model="channelsConfigData.status" placeholder="多通道">
                         <el-option label="true" :value="true"></el-option>
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
@@ -138,10 +138,10 @@
               <!-- scannerConfig -->
               <el-form ref="form" :model="scannerConfigData" label-width="100px" v-if="activeName == 'scannerConfig'">
                 <el-form-item label="connector">
-                    <el-input v-model="scannerConfigData.connector" style="width: 100px"></el-input>
+                    <el-input v-model="scannerConfigData.connector" style="width: 100px" placeholder="连接符"></el-input>
                 </el-form-item>
                 <el-form-item label="qrcode">
-                    <el-select v-model="scannerConfigData.qrcode" multiple placeholder="请选择">
+                    <el-select v-model="scannerConfigData.qrcode" multiple placeholder="连接项">
                       <el-option
                          v-for="(item,index) in paramsconfigData"
                         :key="index"
@@ -161,10 +161,10 @@
                     <el-input v-model="backendConfigData.qrpadding" style="width: 150px"></el-input>
                 </el-form-item>
                 <el-form-item label="connector">
-                    <el-input v-model="backendConfigData.connector" style="width: 150px"></el-input>
+                    <el-input v-model="backendConfigData.connector" style="width: 150px" placeholder="连接符"></el-input>
                 </el-form-item>
                 <el-form-item label="qrcode">
-                    <el-select v-model="backendConfigData.qrcode" multiple placeholder="请选择">
+                    <el-select v-model="backendConfigData.qrcode" multiple placeholder="连接项">
                       <el-option
                          v-for="(item,index) in paramsconfigData"
                         :key="index"
@@ -175,7 +175,7 @@
                     <!-- <el-input v-model="scannerConfigData.connector" style="width: 100px"></el-input> -->
                 </el-form-item>
                 <el-form-item label="note">
-                    <el-input v-model="backendConfigData.note" style="width: 150px"></el-input>
+                    <el-input v-model="backendConfigData.note" style="width: 150px" placeholder="备注信息"></el-input>
                 </el-form-item>
                  <el-form-item>
                     <el-button type="primary" @click="submitBackendConfig">保存</el-button>
@@ -206,45 +206,45 @@
         <el-dialog title="paramsConfig配置" :visible.sync="dialogFormVisible" class="dialog-form" top="2vh">
             <el-form :model="paramsconfigForm">
                 <el-form-item label="key" label-width="100px">
-                    <el-input v-model="paramsconfigForm.key" size="small"  autocomplete="off"></el-input>
+                    <el-input v-model="paramsconfigForm.key" size="small"  autocomplete="off" placeholder="键值"></el-input>
                 </el-form-item>
                 <el-form-item label="name" label-width="100px">
-                    <el-input v-model="paramsconfigForm.name" size="small"  autocomplete="off"></el-input>
+                    <el-input v-model="paramsconfigForm.name" size="small"  autocomplete="off" placeholder="名称"></el-input>
                 </el-form-item>
                 <el-form-item label="flex" label-width="100px">
-                    <el-input v-model="paramsconfigForm.flex" size="small"  autocomplete="off"></el-input>
+                    <el-input v-model="paramsconfigForm.flex" size="small"  autocomplete="off" placeholder="布局占比"></el-input>
                 </el-form-item>
                 <el-form-item label="prefix" label-width="100px">
-                    <el-select v-model="paramsconfigForm.prefix" size="small">
+                    <el-select v-model="paramsconfigForm.prefix" size="small" placeholder="prefix">
                         <el-option label="true" :value="true"></el-option>
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="tailvalue" label-width="100px">
-                    <el-input v-model="paramsconfigForm.tailvalue" size="small"  autocomplete="off"></el-input>
-                </el-form-item>
                 <el-form-item label="prevalue" label-width="100px">
-                    <el-input v-model="paramsconfigForm.prevalue" size="small"  autocomplete="off"></el-input>
+                    <el-input v-model="paramsconfigForm.prevalue" size="small"  autocomplete="off"  placeholder="前缀"></el-input>
+                </el-form-item>
+                <el-form-item label="tailvalue" label-width="100px">
+                    <el-input v-model="paramsconfigForm.tailvalue" size="small"  autocomplete="off" placeholder="后缀"></el-input>
                 </el-form-item>
                 <!-- 20200814 params新增参数 -->
                 <el-form-item label="padding" label-width="100px">
-                    <el-select v-model="paramsconfigForm.padding" size="small">
+                    <el-select v-model="paramsconfigForm.padding" size="small" placeholder="显示连接符">
                         <el-option label="true" :value="true"></el-option>
                         <el-option label="false" :value="false"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="options" label-width="100px">
-                    <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off"></el-input>
+                    <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off" placeholder="选项（用英文逗号分隔）"></el-input>
                 </el-form-item>
                 <el-form-item label="increase" label-width="100px">
-                  <el-select v-model="paramsconfigForm.increase" size="small">
+                  <el-select v-model="paramsconfigForm.increase" size="small" placeholder="自增">
                       <el-option label="0" :value="0"></el-option>
                       <el-option label="1" :value="1"></el-option>
                   </el-select>
                     <!-- <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input> -->
                 </el-form-item>
                 <el-form-item label="validate" label-width="100px">
-                    <el-select v-model="paramsconfigForm.validate" size="small">
+                    <el-select v-model="paramsconfigForm.validate" size="small" placeholder="参数类型">
                         <el-option label="Any-Number" value="Any-Number"></el-option>
                         <el-option label="Number" value="Number"></el-option>
                         <el-option label="CN" value="CN"></el-option>
@@ -259,7 +259,7 @@
             </div>
         </el-dialog>
         <!-- 界面预览 -->
-        <el-dialog title="界面预览" :visible.sync="previewVisible" class="dialog-form">
+        <el-dialog title="界面预览" :visible.sync="previewVisible">
           <div  v-if="jsonData">
             <div v-for="(item, index) in jsonData.webConfig" :key="index" class="leftIem">
               <div v-for="(value,index) in item.value" :key="index" :style="{flex:jsonData.paramsConfig[value].flex}" class="row-box">
