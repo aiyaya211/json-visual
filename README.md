@@ -4,6 +4,9 @@ json可视化配置工具
 2. 支持`json`的实时预览
 3. 支持`json`的导入和导出  
 
+安装依赖包：
+`npm install`
+
 运行：
 `npm run dev`
 
