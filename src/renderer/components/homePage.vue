@@ -237,10 +237,11 @@
                     <el-input v-model="paramsconfigForm.options" size="small"  autocomplete="off" placeholder="选项（用英文逗号分隔）"></el-input>
                 </el-form-item>
                 <el-form-item label="increase" label-width="100px">
-                  <el-select v-model="paramsconfigForm.increase" size="small" placeholder="自增">
+                  <!-- <el-select v-model="paramsconfigForm.increase" size="small" placeholder="自增">
                       <el-option label="0" :value="0"></el-option>
                       <el-option label="1" :value="1"></el-option>
-                  </el-select>
+                  </el-select> -->
+                    <el-input-number v-model="paramsconfigForm.increase" size="small"></el-input-number>
                     <!-- <el-input v-model="paramsconfigForm.increase" size="small"  autocomplete="off"></el-input> -->
                 </el-form-item>
                 <el-form-item label="validate" label-width="100px">
@@ -661,19 +662,23 @@ export default {
           element.value.forEach(i => {
             console.log(_this.paramsconfigData[i].increase)
             console.log(i)
-            if (_this.paramsconfigData[i].increase === 1 || _this.paramsconfigData[i].increase === '1') {
+            if (_this.paramsconfigData[i].increase !== 0) {
               console.log(i)
+              console.log(10000)
               _this.increaseConfigData[index].push(i)
             }
           })
         }
       })
       this.increaseConfigData = this.deleteEmpty(this.increaseConfigData)
-      for (let key in this.increaseConfigData) {
-        this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
+      if (this.increaseConfigData.length > 0) {
+        for (let key in this.increaseConfigData) {
+          this.$set(this.jsonData.increase, key, this.increaseConfigData[key])
+        }
       }
-      console.log(this.increaseConfigData)
-      console.log('this.webConfigData')
+      if (this.increaseConfigData.length === 0) {
+        this.$set(this.jsonData.increase, 0, this.increaseConfigData)
+      }
     },
     submitChannelConfig () {
       try {
@@ -758,7 +763,7 @@ export default {
           let _this = this
           if (element.status) {
             element.value.forEach(i => {
-              if (_this.paramsconfigData[i].increase === 1 || _this.paramsconfigData[i].increase === '1') {
+              if (_this.paramsconfigData[i].increase !== 0) {
                 _this.increaseConfigData[index].push(i)
               }
             })
