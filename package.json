@@ -23,7 +23,7 @@
   },
   "build": {
     "productName": "json-visual",
-    "appId": "com.example.yourapp",
+    "appId": "json-visual",
     "directories": {
       "output": "build"
     },
