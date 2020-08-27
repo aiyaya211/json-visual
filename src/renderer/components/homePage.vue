@@ -192,7 +192,7 @@
                           :value="index">
                         </el-option>
                     </el-select>
-                    <el-checkbox v-model="item.status">自增</el-checkbox>
+                    <el-checkbox v-model="item.status" :disabled="increaseIsDisabled(item.value)">自增</el-checkbox>
                     <el-button type="danger" size="small" style="margin-left: 10px;" @click="deleteWebconfig(item)">删除</el-button>
                 </el-form-item>
                 <el-form-item>
@@ -892,6 +892,12 @@ export default {
         };
       })
       this.showqrcode = true
+    },
+    increaseIsDisabled (val) {
+      let flag = val.map(i => {
+        return this.paramsconfigData[i].increase === 0 || !this.paramsconfigData[i].increase
+      })
+      return flag[0]
     }
   }
 }
