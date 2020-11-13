@@ -323,7 +323,9 @@ export default {
       channelsConfigData: {},
       increaseConfigData: [],
       scannerConfigData: {},
-      backendConfigData: {},
+      backendConfigData: {
+        qrpadding: ''
+      },
       webConfigData: [],
       fileList: [],
       tableData: [],
@@ -727,6 +729,8 @@ export default {
       }
     },
     submitBackendConfig () {
+      console.log(this.backendConfigData)
+      console.log('this.backendConfigData')
       try {
         for (let key in this.backendConfigData) {
           if (this.jsonData.backendConfig) {
